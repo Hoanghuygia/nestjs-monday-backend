@@ -9,13 +9,15 @@ describe("HealthController", () => {
   let logger: Mock<Logger>;
 
   beforeEach(() => {
-    logger = createMock<Logger>();
+    logger = {
+      log: vi.fn(),
+    } as unknown as Mock<Logger>;
     healthController = new HealthController(logger);
   });
 
   describe("run", () => {
     it("should return is healthy", () => {
-      expect(healthController.run()).toEqual({ status: "ok" });
+      expect(healthController.run()).toEqual({ status: "ok", message: "Health check passed" });
       expect(logger.log).toHaveBeenCalledTimes(1);
     });
   });

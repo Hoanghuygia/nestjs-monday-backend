@@ -1,43 +1,45 @@
 {
   "name": "nestjs-service-template",
   "version": "1.0.0",
-  "description": "Template for new nestjs services",
-  "author": "alberthernandezdev@gmail.com",
+  "description": "Integration services for Monday.com",
+  "author": "hoanghuy051230@gmail.com",
   "license": "MIT",
   "type": "module",
-  "bugs": {
-    "url": "https://github.com/AlbertHernandez/nestjs-service-template/issues"
-  },
-  "homepage": "https://github.com/AlbertHernandez/nestjs-service-template#readme",
+  "templateResouce": "git+https://github.com/AlbertHernandez/nestjs-service-template.git",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AlbertHernandez/nestjs-service-template.git"
+    "url": "https://github.com/Hoanghuygia/nestjs-monday-backend.git"
   },
   "keywords": [
     "typescript",
     "nestjs",
-    "template"
+    "template",
+    "monday.com",
+    "integration"
   ],
   "engines": {
-    "node": ">=22.x",
+    "node": ">=20.x",
     "pnpm": ">=9.x"
   },
   "packageManager": "pnpm@9.14.2",
   "main": "dist/main.js",
   "scripts": {
-    "build": "node --run build:clean && nest build --path tsconfig.prod.json",
+    "build": "pnpm run build:clean && nest build --path tsconfig.prod.json",
     "start": "node dist/main.js",
     "dev": "nest start --watch --debug=0.0.0.0:9229",
-    "test": "rimraf coverage .nyc_output && concurrently 'node --run test:unit' 'node --run test:e2e' && node --run calculate-global-test-coverage",
+    "start:debug": "nest start --watch --debug=0.0.0.0:9229",
+    "test": "rimraf coverage .nyc_output && concurrently \"pnpm run test:unit\" \"pnpm run test:e2e\" && pnpm run calculate-global-test-coverage",
     "test:unit": "vitest run --coverage --config vitest.config.unit.ts",
     "test:e2e": "vitest run --coverage --config ./vitest.config.e2e.ts",
     "test:performance": "k6 run tests/performance/contexts/users/get-users.mjs",
     "calculate-global-test-coverage": "tsx scripts/calculate-global-test-coverage.ts",
-    "prepare": "[ -f .husky/install.mjs ] && node .husky/install.mjs || true",
+    "prepare": "husky",
     "lint": "eslint --ignore-path .gitignore . --ext .js,.mjs,cjs,.ts,.mts",
     "lint:fix": "eslint --ignore-path .gitignore . --ext .js,.mjs,cjs,.ts,.mts --fix",
     "lint:file": "eslint --ignore-path .gitignore",
     "lint:yaml": "chmod +x scripts/lint_yaml.sh && ./scripts/lint_yaml.sh",
+    "lint-staged": "lint-staged",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "build:clean": "rimraf dist; exit 0",
     "typos": "chmod +x scripts/check_typos.sh && ./scripts/check_typos.sh"
   },
@@ -63,7 +65,8 @@
     "@types/supertest": "^6.0.3",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",
-    "@vitest/coverage-istanbul": "1.3.1",
+    "@vitest/coverage-istanbul": "^1.6.1",
+    "@vitest/coverage-v8": "^1.6.1",
     "concurrently": "^9.2.1",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^9.0.0",
@@ -89,7 +92,7 @@
     "unplugin-swc": "^1.5.8",
     "vite": "^5.4.21",
     "vitest": "^1.6.1",
-    "vitest-mock-extended": "^1.3.1"
+    "vitest-mock-extended": "1.3.1"
   },
   "optionalDependencies": {
     "@rollup/rollup-linux-x64-gnu": "^4.24.3",

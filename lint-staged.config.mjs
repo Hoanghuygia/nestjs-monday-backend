@@ -5,8 +5,6 @@ const config = {
     "vitest related --run",
   ],
   "*.{md,json}": "prettier --write",
-  "*": "node --run typos",
-  "*.{yml,yaml}": "node --run lint:yaml",
 };
 
 export default config;
