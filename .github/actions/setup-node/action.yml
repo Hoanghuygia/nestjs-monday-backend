@@ -12,7 +12,7 @@ inputs:
     default: ''
 
 runs:
-  using: "composite"
+  using: 'composite'
   steps:
     - name: Authenticate npm 🔑
       shell: bash
