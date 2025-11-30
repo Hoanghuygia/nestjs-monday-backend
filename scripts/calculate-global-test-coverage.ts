@@ -1,10 +1,10 @@
-import { execSync } from "node:child_process";
-import path from "node:path";
+import { execSync } from 'node:child_process';
+import path from 'node:path';
 
-import fs from "fs-extra";
+import fs from 'fs-extra';
 
-const REPORTS_PATH = path.resolve(process.cwd(), ".nyc_output");
-const COVERAGE_PATH = path.resolve(process.cwd(), "coverage");
+const REPORTS_PATH = path.resolve(process.cwd(), '.nyc_output');
+const COVERAGE_PATH = path.resolve(process.cwd(), 'coverage');
 
 fs.emptyDirSync(REPORTS_PATH);
 fs.copyFileSync(
@@ -16,5 +16,5 @@ fs.copyFileSync(
   `${REPORTS_PATH}/e2e-coverage.json`,
 );
 execSync(`nyc report --report-dir ${COVERAGE_PATH}/global`, {
-  stdio: "inherit",
+  stdio: 'inherit',
 });

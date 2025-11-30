@@ -23,7 +23,8 @@ COPY nest-cli.json .
 COPY src src
 
 EXPOSE $PORT
-CMD ["pnpm", "run", "dev"]
+# CMD ["pnpm", "run", "dev"]
+CMD ["sleep", "infinity"]
 
 FROM base AS build
 
