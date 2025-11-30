@@ -27,7 +27,8 @@ async function bootstrap() {
 bootstrap().catch(handleError);
 
 function handleError(error: unknown) {
-  console.error(error);
+  new Logger('Bootstrap').error(error);
+  // eslint-disable-next-line unicorn/no-process-exit
   process.exit(1);
 }
 

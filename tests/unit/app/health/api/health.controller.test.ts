@@ -1,6 +1,6 @@
 import { Logger } from '@nestjs/common';
 
-import { createMock, Mock } from '@/tests/utils/mock';
+import { Mock } from '@/tests/utils/mock';
 
 import { HealthController } from '@/app/health/api/health.controller';
 
