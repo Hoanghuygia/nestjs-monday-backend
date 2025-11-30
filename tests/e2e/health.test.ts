@@ -1,14 +1,14 @@
 import {
   FastifyAdapter,
   NestFastifyApplication,
-} from "@nestjs/platform-fastify";
-import { Test, TestingModule } from "@nestjs/testing";
-import * as nock from "nock";
-import request from "supertest";
+} from '@nestjs/platform-fastify';
+import { Test, TestingModule } from '@nestjs/testing';
+import * as nock from 'nock';
+import request from 'supertest';
 
-import { AppModule } from "@/app/app.module";
+import { AppModule } from '@/app/app.module';
 
-describe("Health", () => {
+describe('Health', () => {
   let app: NestFastifyApplication;
 
   beforeAll(async () => {
@@ -22,7 +22,7 @@ describe("Health", () => {
     await app.init();
     await app.getHttpAdapter().getInstance().ready();
     nock.disableNetConnect();
-    nock.enableNetConnect("127.0.0.1");
+    nock.enableNetConnect('127.0.0.1');
   });
 
   afterEach(() => {
@@ -34,9 +34,12 @@ describe("Health", () => {
     nock.enableNetConnect();
   });
 
-  it("/GET health", async () => {
-    const response = await request(app.getHttpServer()).get("/health");
+  it('/GET health', async () => {
+    const response = await request(app.getHttpServer()).get('/health');
     expect(response.status).toBe(200);
-    expect(response.body).toEqual({ status: "ok", message: "Health check passed" });
+    expect(response.body).toEqual({
+      status: 'ok',
+      message: 'Health check passed',
+    });
   });
 });

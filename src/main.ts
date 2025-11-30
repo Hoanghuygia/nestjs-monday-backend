@@ -1,12 +1,12 @@
-import { Logger } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
-import { NestFactory } from "@nestjs/core";
+import { Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { NestFactory } from '@nestjs/core';
 import {
   FastifyAdapter,
   NestFastifyApplication,
-} from "@nestjs/platform-fastify";
+} from '@nestjs/platform-fastify';
 
-import { AppModule } from "@/app/app.module";
+import { AppModule } from '@/app/app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -14,11 +14,11 @@ async function bootstrap() {
     new FastifyAdapter(),
   );
 
-  app.setGlobalPrefix("api");
+  app.setGlobalPrefix('api');
   const configService = app.get(ConfigService);
-  const port = configService.get<string>("PORT", "3000");
+  const port = configService.get<string>('PORT', '3000');
 
-  await app.listen(port, "0.0.0.0");
+  await app.listen(port, '0.0.0.0');
 
   const logger = app.get(Logger);
   logger.log(`App is ready and listening on port ${port} 🚀`);
@@ -27,8 +27,9 @@ async function bootstrap() {
 bootstrap().catch(handleError);
 
 function handleError(error: unknown) {
-  console.error(error);
+  new Logger('Bootstrap').error(error);
+  // eslint-disable-next-line unicorn/no-process-exit
   process.exit(1);
 }
 
-process.on("uncaughtException", handleError);
+process.on('uncaughtException', handleError);

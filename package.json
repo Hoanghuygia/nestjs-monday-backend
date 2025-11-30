@@ -1,11 +1,11 @@
 {
-  "name": "nestjs-service-template",
+  "name": "nestjs-monday-backend",
   "version": "1.0.0",
   "description": "Integration services for Monday.com",
   "author": "hoanghuy051230@gmail.com",
   "license": "MIT",
   "type": "module",
-  "templateResouce": "git+https://github.com/AlbertHernandez/nestjs-service-template.git",
+  "templateResource": "git+https://github.com/AlbertHernandez/nestjs-service-template.git",
   "repository": {
     "type": "git",
     "url": "https://github.com/Hoanghuygia/nestjs-monday-backend.git"
@@ -27,7 +27,7 @@
     "build": "pnpm run build:clean && nest build --path tsconfig.prod.json",
     "start": "node dist/main.js",
     "dev": "nest start --watch --debug=0.0.0.0:9229",
-    "start:debug": "nest start --watch --debug=0.0.0.0:9229",
+    "dev:debug": "nest start --watch --debug=0.0.0.0:9229 --transpile-only",
     "test": "rimraf coverage .nyc_output && concurrently \"pnpm run test:unit\" \"pnpm run test:e2e\" && pnpm run calculate-global-test-coverage",
     "test:unit": "vitest run --coverage --config vitest.config.unit.ts",
     "test:e2e": "vitest run --coverage --config ./vitest.config.e2e.ts",
