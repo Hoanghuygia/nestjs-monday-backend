@@ -1,11 +1,11 @@
 {
-  "name": "nestjs-service-template",
+  "name": "nestjs-monday-backend",
   "version": "1.0.0",
   "description": "Integration services for Monday.com",
   "author": "hoanghuy051230@gmail.com",
   "license": "MIT",
   "type": "module",
-  "templateResouce": "git+https://github.com/AlbertHernandez/nestjs-service-template.git",
+  "templateResource": "git+https://github.com/AlbertHernandez/nestjs-service-template.git",
   "repository": {
     "type": "git",
     "url": "https://github.com/Hoanghuygia/nestjs-monday-backend.git"
