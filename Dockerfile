@@ -1,4 +1,4 @@
-FROM node:22-alpine3.20 AS base
+FROM node:22-slim AS base
 
 ENV DIR /app
 WORKDIR $DIR
@@ -7,30 +7,26 @@ ARG NPM_TOKEN
 FROM base AS dev
 
 ENV NODE_ENV=development
-ENV CI=true
 
 
+COPY package.json ./
 
-COPY package.json package-lock.json ./
-
-RUN echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ".npmrc" && \
-    npm ci && \
-    rm -f .npmrc
+RUN npm install
 
 COPY tsconfig*.json .
 COPY .swcrc .
 COPY nest-cli.json .
+COPY .mappsrc .
 COPY src src
 
-EXPOSE $PORT
-# CMD ["npm", "run", "dev"]
-CMD ["sleep", "infinity"]
+EXPOSE 8080
+CMD ["npm", "run", "dev:server"]
 
 FROM base AS build
 
 ENV CI=true
 
-RUN apk update && apk add --no-cache dumb-init=1.2.5-r3
+RUN apt-get update && apt-get install -y dumb-init
 
 COPY package.json package-lock.json ./
 RUN echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ".npmrc" && \
@@ -40,6 +36,7 @@ RUN echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ".npmrc" && \
 COPY tsconfig*.json .
 COPY .swcrc .
 COPY nest-cli.json .
+COPY .mappsrc .
 COPY src src
 
 RUN node --run build && \
