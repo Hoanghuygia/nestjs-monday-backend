@@ -26,7 +26,10 @@ FROM base AS build
 
 ENV CI=true
 
-RUN apt-get update && apt-get install -y dumb-init
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends dumb-init \
+    && rm -rf /var/lib/apt/lists/*
+
 
 COPY package.json package-lock.json ./
 RUN echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ".npmrc" && \
