@@ -1,7 +1,4 @@
-import {
-  FastifyAdapter,
-  NestFastifyApplication,
-} from '@nestjs/platform-fastify';
+import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as nock from 'nock';
 import request from 'supertest';
@@ -9,18 +6,15 @@ import request from 'supertest';
 import { AppModule } from '@/app/app.module';
 
 describe('Health', () => {
-  let app: NestFastifyApplication;
+  let app: INestApplication;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
 
-    app = moduleFixture.createNestApplication<NestFastifyApplication>(
-      new FastifyAdapter(),
-    );
+    app = moduleFixture.createNestApplication();
     await app.init();
-    await app.getHttpAdapter().getInstance().ready();
     nock.disableNetConnect();
     nock.enableNetConnect('127.0.0.1');
   });
