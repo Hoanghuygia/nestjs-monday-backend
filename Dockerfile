@@ -7,7 +7,7 @@ ARG NPM_TOKEN
 FROM base AS dev
 
 ENV NODE_ENV=development
-
+ENV CI=true
 
 COPY package.json ./
 
