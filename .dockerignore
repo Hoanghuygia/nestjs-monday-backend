@@ -1,8 +1,9 @@
 *
 !/package.json
-!/pnpm-lock.yaml
+!/package-lock.json
 !/tsconfig.prod.json
 !/tsconfig.json
 !/.swcrc
 !/nest-cli.json
+!/.mappsrc
 !/src
