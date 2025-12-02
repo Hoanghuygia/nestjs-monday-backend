@@ -9,14 +9,22 @@ FROM base AS dev
 ENV NODE_ENV=development
 ENV CI=true
 
-COPY package.json ./
+RUN apt update && apt install -y curl \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN npm install
+COPY package.json package-lock.json ./
+COPY patches patches
+
+# Install dependencies without running postinstall scripts first
+RUN npm install --ignore-scripts && \
+    # Then run the postinstall scripts
+    npm rebuild || true
 
 COPY tsconfig*.json .
 COPY .swcrc .
 COPY nest-cli.json .
 COPY .mappsrc .
+COPY fetch-schema.sh .
 COPY src src
 
 EXPOSE 8080

@@ -6,4 +6,6 @@
 !/.swcrc
 !/nest-cli.json
 !/.mappsrc
+!/fetch-schema.sh
 !/src
+!/patches

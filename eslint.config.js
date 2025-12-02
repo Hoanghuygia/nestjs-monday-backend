@@ -9,7 +9,13 @@ const globals = require('globals');
 
 module.exports = tseslint.config(
   {
-    ignores: ['dist/**', 'node_modules/**', 'coverage/**', 'eslint.config.js'],
+    ignores: [
+      'dist/**',
+      'node_modules/**',
+      'coverage/**',
+      'eslint.config.js',
+      'src/graphql/generated/**',
+    ],
   },
   eslint.configs.recommended,
   ...tseslint.configs.strictTypeChecked,
@@ -64,6 +70,8 @@ module.exports = tseslint.config(
       '@typescript-eslint/no-unnecessary-condition': 'off',
       '@typescript-eslint/no-unsafe-function-type': 'off',
       '@typescript-eslint/no-unsafe-argument': 'off',
+      "@typescript-eslint/no-redundant-type-constituents": "off",
+
     },
   },
   {

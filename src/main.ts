@@ -66,8 +66,6 @@ async function bootstrap() {
     }),
   );
 
-  // await app.listen(process.env.PORT ?? 8080);
-
   app.setGlobalPrefix(configService.get<string>('apiPrefix', 'api'));
   const port = configService.get<string>('PORT', '8080');
 
