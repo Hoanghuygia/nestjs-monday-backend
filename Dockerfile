@@ -13,12 +13,13 @@ RUN apt update && apt install -y curl \
     && rm -rf /var/lib/apt/lists/*
 
 COPY package.json package-lock.json ./
-COPY patches patches
 
-# Install dependencies without running postinstall scripts first
+# Install dependencies without running postinstall scripts to avoid patch-package errors
+# Then manually install platform-specific ngrok binary for linux-x64
 RUN npm install --ignore-scripts && \
-    # Then run the postinstall scripts
-    npm rebuild || true
+    npm install --no-save @ngrok/ngrok-linux-x64-gnu
+
+# RUN npm install
 
 COPY tsconfig*.json .
 COPY .swcrc .

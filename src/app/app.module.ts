@@ -9,6 +9,7 @@ import { LoggerModule } from '@/shared/logger/logger.module';
 import { GlobalExceptionFilter } from '../common/filters/global-exception.filter';
 import { HttpExceptionFilter } from '../common/filters/http-exception.filter';
 import { ValidationExceptionFilter } from '../common/filters/validation-exception.filter';
+import { MondayModule } from '../modules/monday/monday.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { ValidationExceptionFilter } from '../common/filters/validation-exceptio
     LoggerModule,
     HealthModule,
     UserModule,
+    MondayModule
   ],
   providers: [
     {
