@@ -1,6 +1,7 @@
 import type { Response, Request } from 'express';
-import { Body, Controller, Post, Req, Res} from '@nestjs/common';
+import { Body, Controller, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { Logger } from '@/src/utils/logger';
+import { AuthGuardFactory } from '@/src/common/guards/auth.guard';
 
 @Controller('monday')
 export class MondayController {
@@ -9,7 +10,7 @@ export class MondayController {
     constructor() { }
 
     @Post('test')
-    // @UseGuards(MondayAuthGuard)
+    @UseGuards(AuthGuardFactory('MONDAY_SIGNING_SECRET'))
     async testEndpoint(@Req() req: Request, @Res() res: Response, @Body() body: unknown) {
         try {
             this.logger.info(`testEndpoint called with body: ${JSON.stringify(body)}`);
@@ -17,9 +18,7 @@ export class MondayController {
                                 query: ${JSON.stringify(req.query)},
                                 params: ${JSON.stringify(req.params)},
                                 body: ${JSON.stringify(req.body)},
-                                ip: ${req.ip},
-                                url: ${req.url},
-                                method: ${req.method},`);
+                                sessionID: ${JSON.stringify(req.session)}`);
             return res.status(200).json({ message: 'Test endpoint reached successfully', data: body });
         }
         catch (error) {

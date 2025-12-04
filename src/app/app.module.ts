@@ -10,6 +10,7 @@ import { GlobalExceptionFilter } from '../common/filters/global-exception.filter
 import { HttpExceptionFilter } from '../common/filters/http-exception.filter';
 import { ValidationExceptionFilter } from '../common/filters/validation-exception.filter';
 import { MondayModule } from '../modules/monday/monday.module';
+import { ManageModule } from '../modules/management/manage.module';
 
 @Module({
   imports: [
@@ -17,7 +18,8 @@ import { MondayModule } from '../modules/monday/monday.module';
     LoggerModule,
     HealthModule,
     UserModule,
-    MondayModule
+    MondayModule,
+    ManageModule
   ],
   providers: [
     {

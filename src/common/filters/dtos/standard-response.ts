@@ -44,7 +44,7 @@ export class StandardResponse<
   }
 
   static error<T extends Record<string, unknown> = Record<string, unknown>>(
-    error: ErrorResponseDTO<T>,
+    error: ErrorResponseDTO<T> | null = null,
     code: string,
     message: string,
     status = '500',
