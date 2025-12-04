@@ -9,14 +9,23 @@ FROM base AS dev
 ENV NODE_ENV=development
 ENV CI=true
 
-COPY package.json ./
+RUN apt update && apt install -y curl \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN npm install
+COPY package.json package-lock.json ./
+
+# Install dependencies without running postinstall scripts to avoid patch-package errors
+# Then manually install platform-specific ngrok binary for linux-x64
+RUN npm install --ignore-scripts && \
+    npm install --no-save @ngrok/ngrok-linux-x64-gnu
+
+# RUN npm install
 
 COPY tsconfig*.json .
 COPY .swcrc .
 COPY nest-cli.json .
 COPY .mappsrc .
+COPY fetch-schema.sh .
 COPY src src
 
 EXPOSE 8080
