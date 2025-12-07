@@ -16,6 +16,10 @@
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
+    "typeRoots": [
+      "./node_modules/@types",
+      "./src/@type"
+    ],
     "paths": {
       "@/src/*": [
         "src/*"
