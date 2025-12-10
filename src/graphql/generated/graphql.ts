@@ -1,40 +1,27 @@
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K];
-};
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]?: Maybe<T[SubKey]>;
-};
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]: Maybe<T[SubKey]>;
-};
-export type MakeEmpty<
-  T extends { [key: string]: unknown },
-  K extends keyof T,
-> = { [_ in K]?: never };
-export type Incremental<T> =
-  | T
-  | {
-      [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never;
-    };
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: { input: string; output: string };
-  String: { input: string; output: string };
-  Boolean: { input: boolean; output: boolean };
-  Int: { input: number; output: number };
-  Float: { input: number; output: number };
-  CompareValue: { input: any; output: any };
+  ID: { input: string; output: string; }
+  String: { input: string; output: string; }
+  Boolean: { input: boolean; output: boolean; }
+  Int: { input: number; output: number; }
+  Float: { input: number; output: number; }
+  CompareValue: { input: any; output: any; }
   /** A date. */
-  Date: { input: any; output: any };
+  Date: { input: any; output: any; }
   /** A multipart file */
-  File: { input: any; output: any };
+  File: { input: any; output: any; }
   /** An ISO 8601-encoded datetime (e.g., 2024-04-09T13:45:30Z) */
-  ISO8601DateTime: { input: any; output: any };
+  ISO8601DateTime: { input: any; output: any; }
   /** A JSON formatted string. */
-  JSON: { input: any; output: any };
-  policy__Policy: { input: any; output: any };
+  JSON: { input: any; output: any; }
+  policy__Policy: { input: any; output: any; }
 };
 
 /** Your monday.com account */
@@ -150,7 +137,7 @@ export enum ActivateUsersErrorCode {
   ExceedsBatchLimit = 'EXCEEDS_BATCH_LIMIT',
   Failed = 'FAILED',
   InvalidInput = 'INVALID_INPUT',
-  UserNotFound = 'USER_NOT_FOUND',
+  UserNotFound = 'USER_NOT_FOUND'
 }
 
 /** Result of activating users. */
@@ -182,7 +169,7 @@ export type AggregateBasicAggregationResult = {
 
 export enum AggregateFromElementType {
   /** A single table to select from */
-  Table = 'TABLE',
+  Table = 'TABLE'
 }
 
 export type AggregateFromTableInput = {
@@ -222,9 +209,7 @@ export type AggregateQueryResult = {
   results?: Maybe<Array<AggregateResultSet>>;
 };
 
-export type AggregateResult =
-  | AggregateBasicAggregationResult
-  | AggregateGroupByResult;
+export type AggregateResult = AggregateBasicAggregationResult | AggregateGroupByResult;
 
 export type AggregateResultEntry = {
   __typename?: 'AggregateResultEntry';
@@ -256,7 +241,7 @@ export enum AggregateSelectElementType {
   /** A column to select */
   Column = 'COLUMN',
   /** A function to select */
-  Function = 'FUNCTION',
+  Function = 'FUNCTION'
 }
 
 export type AggregateSelectFunctionInput = {
@@ -346,7 +331,7 @@ export enum AggregateSelectFunctionName {
   /** Remove whitespace from text */
   Trim = 'TRIM',
   /** Convert text to uppercase */
-  Upper = 'UPPER',
+  Upper = 'UPPER'
 }
 
 /** Input for app feature release data. */
@@ -370,7 +355,7 @@ export enum AppFeatureReleaseKind {
   /** Externally hosted application loaded via iframe */
   ExternalHosting = 'EXTERNAL_HOSTING',
   /** Server-side application hosted on monday code infrastructure */
-  ServerSideCode = 'SERVER_SIDE_CODE',
+  ServerSideCode = 'SERVER_SIDE_CODE'
 }
 
 export type AppFeatureType = {
@@ -493,7 +478,7 @@ export enum AppFeatureTypeE {
   /** WORKFLOW_TEMPLATE */
   WorkflowTemplate = 'WORKFLOW_TEMPLATE',
   /** WORKSPACE_VIEW */
-  WorkspaceView = 'WORKSPACE_VIEW',
+  WorkspaceView = 'WORKSPACE_VIEW'
 }
 
 /** An app install details. */
@@ -541,7 +526,7 @@ export enum AppKind {
   /** App is private and only visible to the account that created it */
   Private = 'PRIVATE',
   /** App is public and can be shared and installed by other accounts */
-  Public = 'PUBLIC',
+  Public = 'PUBLIC'
 }
 
 /** The app monetization status for the current account */
@@ -590,7 +575,7 @@ export enum AppPermission {
   /** Permission scope: workspaces:read */
   WorkspacesRead = 'WORKSPACES_READ',
   /** Permission scope: workspaces:write */
-  WorkspacesWrite = 'WORKSPACES_WRITE',
+  WorkspacesWrite = 'WORKSPACES_WRITE'
 }
 
 /** The current state of an app based on its version status */
@@ -598,7 +583,7 @@ export enum AppStatus {
   /** App is in draft state and not yet published */
   Draft = 'DRAFT',
   /** App has a live published version */
-  Live = 'LIVE',
+  Live = 'LIVE'
 }
 
 /** The account subscription details for the app. */
@@ -705,6 +690,7 @@ export type AppType = {
   webhook_url?: Maybe<Scalars['String']['output']>;
 };
 
+
 export type AppTypeFeaturesArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   live_version_only?: InputMaybe<Scalars['Boolean']['input']>;
@@ -791,7 +777,7 @@ export enum AssetsSource {
   /** Assets only from file columns */
   Columns = 'columns',
   /** Assets only from item's files gallery */
-  Gallery = 'gallery',
+  Gallery = 'gallery'
 }
 
 /** Error that occurred while changing team owners. */
@@ -813,7 +799,7 @@ export enum AssignTeamOwnersErrorCode {
   InvalidInput = 'INVALID_INPUT',
   UserNotFound = 'USER_NOT_FOUND',
   UserNotMemberOfTeam = 'USER_NOT_MEMBER_OF_TEAM',
-  ViewersOrGuests = 'VIEWERS_OR_GUESTS',
+  ViewersOrGuests = 'VIEWERS_OR_GUESTS'
 }
 
 /** Result of changing the team's ownership. */
@@ -871,7 +857,7 @@ export enum BaseRoleName {
   Admin = 'ADMIN',
   Guest = 'GUEST',
   Member = 'MEMBER',
-  ViewOnly = 'VIEW_ONLY',
+  ViewOnly = 'VIEW_ONLY'
 }
 
 /** Result of an batch operation */
@@ -1037,6 +1023,7 @@ export type Board = {
   workspace_id?: Maybe<Scalars['ID']['output']>;
 };
 
+
 /** A monday.com board. */
 export type BoardActivity_LogsArgs = {
   column_ids?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
@@ -1049,6 +1036,7 @@ export type BoardActivity_LogsArgs = {
   user_ids?: InputMaybe<Array<Scalars['ID']['input']>>;
 };
 
+
 /** A monday.com board. */
 export type BoardColumnsArgs = {
   capabilities?: InputMaybe<Array<ColumnCapability>>;
@@ -1056,10 +1044,12 @@ export type BoardColumnsArgs = {
   types?: InputMaybe<Array<ColumnType>>;
 };
 
+
 /** A monday.com board. */
 export type BoardGroupsArgs = {
   ids?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
+
 
 /** A monday.com board. */
 export type BoardItems_PageArgs = {
@@ -1069,17 +1059,20 @@ export type BoardItems_PageArgs = {
   query_params?: InputMaybe<ItemsQuery>;
 };
 
+
 /** A monday.com board. */
 export type BoardTeam_OwnersArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   page?: InputMaybe<Scalars['Int']['input']>;
 };
 
+
 /** A monday.com board. */
 export type BoardTeam_SubscribersArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   page?: InputMaybe<Scalars['Int']['input']>;
 };
+
 
 /** A monday.com board. */
 export type BoardUpdatesArgs = {
@@ -1088,6 +1081,7 @@ export type BoardUpdatesArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   page?: InputMaybe<Scalars['Int']['input']>;
 };
+
 
 /** A monday.com board. */
 export type BoardViewsArgs = {
@@ -1100,7 +1094,7 @@ export enum BoardAccessLevel {
   /** Edit contents */
   Edit = 'edit',
   /** View */
-  View = 'view',
+  View = 'view'
 }
 
 /** The board attributes available. */
@@ -1110,7 +1104,7 @@ export enum BoardAttributes {
   /** Board description. */
   Description = 'description',
   /** Board name. */
-  Name = 'name',
+  Name = 'name'
 }
 
 /** Basic role names for board permissions. Each role grants different levels of access to the board. */
@@ -1126,7 +1120,7 @@ export enum BoardBasicRoleName {
   /** Editor role - Can edit both the structure (columns, groups) and content (items) of the board */
   Editor = 'editor',
   /** Viewer role - Read-only access to the board, cannot edit structure or content */
-  Viewer = 'viewer',
+  Viewer = 'viewer'
 }
 
 /** A board duplication */
@@ -1147,7 +1141,7 @@ export enum BoardEditPermissions {
   /** Everyone */
   Everyone = 'everyone',
   /** Owners */
-  Owners = 'owners',
+  Owners = 'owners'
 }
 
 /** The complete graph export for a board */
@@ -1170,7 +1164,7 @@ export enum BoardHierarchy {
   /** classic */
   Classic = 'classic',
   /** multilevel of items */
-  MultiLevel = 'multi_level',
+  MultiLevel = 'multi_level'
 }
 
 /** The board kinds available. */
@@ -1180,7 +1174,7 @@ export enum BoardKind {
   /** Public boards. */
   Public = 'public',
   /** Shareable boards. */
-  Share = 'share',
+  Share = 'share'
 }
 
 export type BoardMuteSettings = {
@@ -1212,7 +1206,7 @@ export enum BoardMuteState {
   /** All notifications for all users are muted on this board. This state is set by the board owner(s) and only they can change it. */
   MuteAll = 'MUTE_ALL',
   /** The board is not muted at all (default state). This state is set by the board owner(s) and only they can change it. */
-  NotMuted = 'NOT_MUTED',
+  NotMuted = 'NOT_MUTED'
 }
 
 /** The board object types. */
@@ -1224,7 +1218,7 @@ export enum BoardObjectType {
   /** Document. */
   Document = 'document',
   /** Sub Items Board. */
-  SubItemsBoard = 'sub_items_board',
+  SubItemsBoard = 'sub_items_board'
 }
 
 export type BoardRelationValue = ColumnValue & {
@@ -1254,7 +1248,7 @@ export enum BoardSubscriberKind {
   /** Board owner. */
   Owner = 'owner',
   /** Board subscriber. */
-  Subscriber = 'subscriber',
+  Subscriber = 'subscriber'
 }
 
 /** Enum representing different usage types for board operations */
@@ -1262,7 +1256,7 @@ export enum BoardUsage {
   /** Board can be connected to a portfolio */
   ConnectToPortfolio = 'CONNECT_TO_PORTFOLIO',
   /** Board can be converted to a project */
-  ConvertToProject = 'CONVERT_TO_PROJECT',
+  ConvertToProject = 'CONVERT_TO_PROJECT'
 }
 
 /** A board's view. */
@@ -1301,7 +1295,7 @@ export enum BoardViewAccessLevel {
   /** Edit */
   Edit = 'edit',
   /** View */
-  View = 'view',
+  View = 'view'
 }
 
 /** Options to order by. */
@@ -1309,7 +1303,7 @@ export enum BoardsOrderBy {
   /** The rank order of the board creation time (desc). */
   CreatedAt = 'created_at',
   /** The last time the user making the request used the board (desc). */
-  UsedAt = 'used_at',
+  UsedAt = 'used_at'
 }
 
 export type ButtonValue = ColumnValue & {
@@ -1357,7 +1351,7 @@ export enum CalculatedFunction {
   /** No calculation */
   None = 'NONE',
   /** Calculate the sum of all values */
-  Sum = 'SUM',
+  Sum = 'SUM'
 }
 
 /** The result of adding users to / removing users from a team. */
@@ -1373,14 +1367,14 @@ export type ChangeTeamMembershipsResult = {
 export enum ChannelEditableStatus {
   AllRelatedNotificationsDontHaveChannel = 'AllRelatedNotificationsDontHaveChannel',
   AlwaysEnabled = 'AlwaysEnabled',
-  Editable = 'Editable',
+  Editable = 'Editable'
 }
 
 /** Available notification channel types: Monday, Email, Slack */
 export enum ChannelType {
   Email = 'Email',
   Monday = 'Monday',
-  Slack = 'Slack',
+  Slack = 'Slack'
 }
 
 export type CheckboxValue = ColumnValue & {
@@ -1461,7 +1455,7 @@ export type ColumnCapabilitiesInput = {
 /** Capabilities supported by the API */
 export enum ColumnCapability {
   /** Capability to show column's calculated value */
-  Calculated = 'CALCULATED',
+  Calculated = 'CALCULATED'
 }
 
 /** An object defining a mapping of column between source board and destination board */
@@ -1477,7 +1471,7 @@ export enum ColumnProperty {
   /** the column description. */
   Description = 'description',
   /** the column title. */
-  Title = 'title',
+  Title = 'title'
 }
 
 export type ColumnPropertyInput = {
@@ -1575,7 +1569,7 @@ export enum ColumnType {
   /** Select the week on which each item should be completed */
   Week = 'week',
   /** Keep track of the time anywhere in the world */
-  WorldClock = 'world_clock',
+  WorldClock = 'world_clock'
 }
 
 export type ColumnValue = {
@@ -1893,7 +1887,7 @@ export enum CustomActivityColor {
   VividCerulean = 'VIVID_CERULEAN',
   YankeesBlue = 'YANKEES_BLUE',
   YellowGreen = 'YELLOW_GREEN',
-  YellowOrange = 'YELLOW_ORANGE',
+  YellowOrange = 'YELLOW_ORANGE'
 }
 
 export enum CustomActivityIcon {
@@ -1911,7 +1905,7 @@ export enum CustomActivityIcon {
   Pliers = 'PLIERS',
   Tripod = 'TRIPOD',
   Twoflags = 'TWOFLAGS',
-  Utencils = 'UTENCILS',
+  Utencils = 'UTENCILS'
 }
 
 /** The custom fields meta data for user profile. */
@@ -1951,7 +1945,7 @@ export enum CustomizableBoardSettings {
   /** Notify me when I am assigned on this board */
   ImAssigned = 'IM_ASSIGNED',
   /** Notify me when I am mentioned on this board */
-  ImMentioned = 'IM_MENTIONED',
+  ImMentioned = 'IM_MENTIONED'
 }
 
 /** API usage data. */
@@ -1994,7 +1988,7 @@ export type Dashboard = {
 /** Dashboard visibility. `PUBLIC` dashboards are visible to all workspace members; `PRIVATE` dashboards are only visible to invited users. */
 export enum DashboardKind {
   Private = 'PRIVATE',
-  Public = 'PUBLIC',
+  Public = 'PUBLIC'
 }
 
 /** Date range filter (inclusive) */
@@ -2044,7 +2038,7 @@ export enum DeactivateUsersErrorCode {
   ExceedsBatchLimit = 'EXCEEDS_BATCH_LIMIT',
   Failed = 'FAILED',
   InvalidInput = 'INVALID_INPUT',
-  UserNotFound = 'USER_NOT_FOUND',
+  UserNotFound = 'USER_NOT_FOUND'
 }
 
 /** Result of deactivating users. */
@@ -2104,7 +2098,7 @@ export enum DependencyRelation {
   /** Start to Start - The dependent item can start only after the predecessor starts */
   Sf = 'SF',
   /** Start to Finish - The dependent item can finish only after the predecessor starts */
-  Ss = 'SS',
+  Ss = 'SS'
 }
 
 export type DependencyValue = ColumnValue & {
@@ -2156,7 +2150,7 @@ export type DirectDocValue = ColumnValue & {
 /** The period of a discount */
 export enum DiscountPeriod {
   Monthly = 'MONTHLY',
-  Yearly = 'YEARLY',
+  Yearly = 'YEARLY'
 }
 
 /** Various documents blocks types, such as text. */
@@ -2192,7 +2186,7 @@ export enum DocBlockContentType {
   /** Table block */
   Table = 'table',
   /** Video block */
-  Video = 'video',
+  Video = 'video'
 }
 
 /** Response from adding markdown content to a document. Contains success status and the IDs of newly created blocks. */
@@ -2213,7 +2207,7 @@ export enum DocKind {
   /** Public document */
   Public = 'public',
   /** Shareable document */
-  Share = 'share',
+  Share = 'share'
 }
 
 export type DocValue = ColumnValue & {
@@ -2237,7 +2231,7 @@ export enum DocsOrderBy {
   /** The rank order of the document creation time (desc). */
   CreatedAt = 'created_at',
   /** The last time the user making the request viewd the document (desc). */
-  UsedAt = 'used_at',
+  UsedAt = 'used_at'
 }
 
 /**
@@ -2287,6 +2281,7 @@ export type Document = {
   /** The document's workspace unique identifier (null for main workspace). */
   workspace_id?: Maybe<Scalars['ID']['output']>;
 };
+
 
 /**
  * Represents a monday.com doc - a rich-text page built from editable blocks (text, files, embeds, etc.).
@@ -2388,7 +2383,7 @@ export enum DuplicateBoardType {
   /** Duplicate board with structure, items and updates. */
   DuplicateBoardWithPulsesAndUpdates = 'duplicate_board_with_pulses_and_updates',
   /** Duplicate board with structure. */
-  DuplicateBoardWithStructure = 'duplicate_board_with_structure',
+  DuplicateBoardWithStructure = 'duplicate_board_with_structure'
 }
 
 /** Controls what gets copied when duplicating a document */
@@ -2396,7 +2391,7 @@ export enum DuplicateType {
   /** Creates a clean copy with only the document structure and content blocks. Best for creating templates or fresh copies. */
   DuplicateDocWithContent = 'duplicate_doc_with_content',
   /** Creates a complete copy including document structure, content blocks, and all comments/update history. Use for full backups. */
-  DuplicateDocWithContentAndUpdates = 'duplicate_doc_with_content_and_updates',
+  DuplicateDocWithContentAndUpdates = 'duplicate_doc_with_content_and_updates'
 }
 
 export type DynamicPosition = {
@@ -2467,7 +2462,7 @@ export enum ExternalWidget {
   /** A Gantt chart visualization of board timelines with dependencies, grouping, and coloring capabilities. */
   Gantt = 'GANTT',
   /** Number widgets for displaying numeric metrics such as accumulated sums, averages, counts, totals, percentages. Ideal for showing single-value metrics, counters, calculated aggregations, and key performance indicators in a prominent numeric format. */
-  Number = 'NUMBER',
+  Number = 'NUMBER'
 }
 
 export type FileAssetValue = {
@@ -2503,7 +2498,7 @@ export enum FileColumnValue {
   /** Generic link file */
   Link = 'link',
   /** OneDrive file */
-  Onedrive = 'onedrive',
+  Onedrive = 'onedrive'
 }
 
 export type FileDocValue = {
@@ -2566,7 +2561,7 @@ export enum FileLinkValueKind {
   /** Generic link file */
   Link = 'link',
   /** OneDrive file */
-  Onedrive = 'onedrive',
+  Onedrive = 'onedrive'
 }
 
 export type FileValue = ColumnValue & {
@@ -2592,7 +2587,7 @@ export enum FirstDayOfTheWeek {
   /** Monday */
   Monday = 'monday',
   /** Sunday */
-  Sunday = 'sunday',
+  Sunday = 'sunday'
 }
 
 /** A workspace folder containing boards, docs, sub folders, etc. */
@@ -2655,7 +2650,7 @@ export enum FolderColor {
   /** sunset */
   Sunset = 'SUNSET',
   /** working_orange */
-  WorkingOrange = 'WORKING_ORANGE',
+  WorkingOrange = 'WORKING_ORANGE'
 }
 
 /** One value out of a list of valid folder custom icons */
@@ -2669,7 +2664,7 @@ export enum FolderCustomIcon {
   /** No custom icon */
   Null = 'NULL',
   /** Work */
-  Work = 'WORK',
+  Work = 'WORK'
 }
 
 /** One value out of a list of valid folder font weights */
@@ -2683,7 +2678,7 @@ export enum FolderFontWeight {
   /** font-weight-very-light */
   FontWeightVeryLight = 'FONT_WEIGHT_VERY_LIGHT',
   /** No font weight */
-  Null = 'NULL',
+  Null = 'NULL'
 }
 
 /** Object containing accessibility options such as language, alt text, etc. */
@@ -2744,7 +2739,7 @@ export enum FormAlignment {
   FullLeft = 'FullLeft',
   FullRight = 'FullRight',
   Left = 'Left',
-  Right = 'Right',
+  Right = 'Right'
 }
 
 /** Object containing visual styling including colors, layout, fonts, and branding elements. */
@@ -2808,7 +2803,7 @@ export type FormBackgroundInput = {
 export enum FormBackgrounds {
   Color = 'Color',
   Image = 'Image',
-  None = 'None',
+  None = 'None'
 }
 
 export type FormCloseDate = {
@@ -2829,7 +2824,7 @@ export type FormCloseDateInput = {
 
 export enum FormDirection {
   LtR = 'LtR',
-  Rtl = 'Rtl',
+  Rtl = 'Rtl'
 }
 
 export type FormDraftSubmission = {
@@ -2896,12 +2891,12 @@ export type FormFeaturesInput = {
 export enum FormFontSize {
   Large = 'Large',
   Medium = 'Medium',
-  Small = 'Small',
+  Small = 'Small'
 }
 
 export enum FormFormat {
   Classic = 'Classic',
-  OneByOne = 'OneByOne',
+  OneByOne = 'OneByOne'
 }
 
 /** Object containing form structure and presentation settings. */
@@ -2948,7 +2943,7 @@ export enum FormLogoPosition {
   Auto = 'Auto',
   Center = 'Center',
   Left = 'Left',
-  Right = 'Right',
+  Right = 'Right'
 }
 
 /** Available logo sizes for form branding */
@@ -2960,7 +2955,7 @@ export enum FormLogoSize {
   /** Medium logo size for standard form branding, height of 40px, width will be scaled to maintain aspect ratio */
   Medium = 'Medium',
   /** Small logo size for compact form branding, height of 32px, width will be scaled to maintain aspect ratio */
-  Small = 'Small',
+  Small = 'Small'
 }
 
 export type FormMonday = {
@@ -3051,21 +3046,21 @@ export type FormQuestionOption = {
 /** Sources for prefilling question values */
 export enum FormQuestionPrefillSources {
   Account = 'Account',
-  QueryParam = 'QueryParam',
+  QueryParam = 'QueryParam'
 }
 
 /** Display options for select-type questions */
 export enum FormQuestionSelectDisplay {
   Dropdown = 'Dropdown',
   Horizontal = 'Horizontal',
-  Vertical = 'Vertical',
+  Vertical = 'Vertical'
 }
 
 /** Ordering options for select question options */
 export enum FormQuestionSelectOrderByOptions {
   Alphabetical = 'Alphabetical',
   Custom = 'Custom',
-  Random = 'Random',
+  Random = 'Random'
 }
 
 /** Question-specific configuration object that varies by question type. */
@@ -3143,7 +3138,7 @@ export enum FormQuestionType {
   Signature = 'Signature',
   SingleSelect = 'SingleSelect',
   Subitems = 'Subitems',
-  Updates = 'Updates',
+  Updates = 'Updates'
 }
 
 export type FormRedirectAfterSubmission = {
@@ -3352,7 +3347,7 @@ export enum GraphqlMondayObject {
   /** Aggregates data from one or more boards. */
   Dashboard = 'Dashboard',
   /** A monday.com folder */
-  Folder = 'Folder',
+  Folder = 'Folder'
 }
 
 /** A group of items in a board. */
@@ -3374,6 +3369,7 @@ export type Group = {
   title: Scalars['String']['output'];
 };
 
+
 /** A group of items in a board. */
 export type GroupItems_PageArgs = {
   cursor?: InputMaybe<Scalars['String']['input']>;
@@ -3393,7 +3389,7 @@ export enum GroupAttributes {
   /** The group's relative position before another group in the board. */
   RelativePositionBefore = 'relative_position_before',
   /** Group title. */
-  Title = 'title',
+  Title = 'title'
 }
 
 /** Configuration settings for group by column */
@@ -3524,7 +3520,7 @@ export type InviteUsersError = {
 
 /** Error codes that can occur while changing email domain. */
 export enum InviteUsersErrorCode {
-  Error = 'ERROR',
+  Error = 'ERROR'
 }
 
 /** Result of inviting users to the account. */
@@ -3581,11 +3577,13 @@ export type Item = {
   url: Scalars['String']['output'];
 };
 
+
 /** An item (table row). */
 export type ItemAssetsArgs = {
   assets_source?: InputMaybe<AssetsSource>;
   column_ids?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
+
 
 /** An item (table row). */
 export type ItemColumn_ValuesArgs = {
@@ -3594,11 +3592,13 @@ export type ItemColumn_ValuesArgs = {
   types?: InputMaybe<Array<ColumnType>>;
 };
 
+
 /** An item (table row). */
 export type ItemLinked_ItemsArgs = {
   link_to_item_column_id: Scalars['String']['input'];
   linked_board_id: Scalars['ID']['input'];
 };
+
 
 /** An item (table row). */
 export type ItemUpdatesArgs = {
@@ -3615,6 +3615,7 @@ export type ItemDescription = {
   /** The item's unique identifier. */
   id?: Maybe<Scalars['ID']['output']>;
 };
+
 
 /** An item description. */
 export type ItemDescriptionBlocksArgs = {
@@ -3652,7 +3653,7 @@ export enum ItemsOrderByDirection {
   /** Ascending order */
   Asc = 'asc',
   /** Descending order */
-  Desc = 'desc',
+  Desc = 'desc'
 }
 
 export type ItemsPageByColumnValuesQuery = {
@@ -3690,7 +3691,7 @@ export enum ItemsQueryOperator {
   /** Logical AND */
   And = 'and',
   /** Logical OR */
-  Or = 'or',
+  Or = 'or'
 }
 
 /** Sort the results by specified columns */
@@ -3741,7 +3742,7 @@ export enum ItemsQueryRuleOperator {
   /** Within the last */
   WithinTheLast = 'within_the_last',
   /** Within the next */
-  WithinTheNext = 'within_the_next',
+  WithinTheNext = 'within_the_next'
 }
 
 export type ItemsResponse = {
@@ -3761,7 +3762,7 @@ export enum Kind {
   /** Represents a person */
   Person = 'person',
   /** Represents a team */
-  Team = 'team',
+  Team = 'team'
 }
 
 export type LastUpdatedValue = ColumnValue & {
@@ -3885,12 +3886,12 @@ export type ManagedColumn = {
 export enum ManagedColumnState {
   Active = 'active',
   Deleted = 'deleted',
-  Inactive = 'inactive',
+  Inactive = 'inactive'
 }
 
 export enum ManagedColumnTypes {
   Dropdown = 'dropdown',
-  Status = 'status',
+  Status = 'status'
 }
 
 export type MarketplaceAiSearchInput = {
@@ -3999,7 +4000,7 @@ export enum MentionType {
   /** Mention a team */
   Team = 'Team',
   /** Mention a user */
-  User = 'User',
+  User = 'User'
 }
 
 /** Metadata wrapper containing payload information for dependency configuration */
@@ -4039,50 +4040,7 @@ export type MirroredItem = {
 };
 
 /** Represents a mirrored value (column value, group, or board). */
-export type MirroredValue =
-  | BatteryValue
-  | Board
-  | BoardRelationValue
-  | ButtonValue
-  | CheckboxValue
-  | ColorPickerValue
-  | CountryValue
-  | CreationLogValue
-  | DateValue
-  | DependencyValue
-  | DirectDocValue
-  | DocValue
-  | DropdownValue
-  | EmailValue
-  | FileValue
-  | FormulaValue
-  | Group
-  | GroupValue
-  | HourValue
-  | IntegrationValue
-  | ItemIdValue
-  | LastUpdatedValue
-  | LinkValue
-  | LocationValue
-  | LongTextValue
-  | MirrorValue
-  | NumbersValue
-  | PeopleValue
-  | PersonValue
-  | PhoneValue
-  | ProgressValue
-  | RatingValue
-  | StatusValue
-  | SubtasksValue
-  | TagsValue
-  | TeamValue
-  | TextValue
-  | TimeTrackingValue
-  | TimelineValue
-  | UnsupportedValue
-  | VoteValue
-  | WeekValue
-  | WorldClockValue;
+export type MirroredValue = BatteryValue | Board | BoardRelationValue | ButtonValue | CheckboxValue | ColorPickerValue | CountryValue | CreationLogValue | DateValue | DependencyValue | DirectDocValue | DocValue | DropdownValue | EmailValue | FileValue | FormulaValue | Group | GroupValue | HourValue | IntegrationValue | ItemIdValue | LastUpdatedValue | LinkValue | LocationValue | LongTextValue | MirrorValue | NumbersValue | PeopleValue | PersonValue | PhoneValue | ProgressValue | RatingValue | StatusValue | SubtasksValue | TagsValue | TeamValue | TextValue | TimeTrackingValue | TimelineValue | UnsupportedValue | VoteValue | WeekValue | WorldClockValue;
 
 /** Root mutation type for the Dependencies service */
 export type Mutation = {
@@ -4385,20 +4343,24 @@ export type Mutation = {
   use_template?: Maybe<Template>;
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationActivate_FormArgs = {
   formToken: Scalars['String']['input'];
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationActivate_Managed_ColumnArgs = {
   id: Scalars['String']['input'];
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationActivate_UsersArgs = {
   user_ids: Array<Scalars['ID']['input']>;
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationAdd_Content_To_Doc_From_MarkdownArgs = {
@@ -4407,6 +4369,7 @@ export type MutationAdd_Content_To_Doc_From_MarkdownArgs = {
   markdown: Scalars['String']['input'];
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationAdd_File_To_ColumnArgs = {
   column_id: Scalars['String']['input'];
@@ -4414,11 +4377,13 @@ export type MutationAdd_File_To_ColumnArgs = {
   item_id: Scalars['ID']['input'];
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationAdd_File_To_UpdateArgs = {
   file: Scalars['File']['input'];
   update_id: Scalars['ID']['input'];
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationAdd_Required_ColumnArgs = {
@@ -4427,12 +4392,14 @@ export type MutationAdd_Required_ColumnArgs = {
   type?: InputMaybe<ValidationsEntityType>;
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationAdd_Subscribers_To_BoardArgs = {
   board_id: Scalars['ID']['input'];
   kind?: InputMaybe<BoardSubscriberKind>;
   user_ids: Array<Scalars['ID']['input']>;
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationAdd_Subscribers_To_ObjectArgs = {
@@ -4441,12 +4408,14 @@ export type MutationAdd_Subscribers_To_ObjectArgs = {
   user_ids: Array<Scalars['ID']['input']>;
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationAdd_Teams_To_BoardArgs = {
   board_id: Scalars['ID']['input'];
   kind?: InputMaybe<BoardSubscriberKind>;
   team_ids: Array<Scalars['ID']['input']>;
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationAdd_Teams_To_WorkspaceArgs = {
@@ -4455,6 +4424,7 @@ export type MutationAdd_Teams_To_WorkspaceArgs = {
   workspace_id: Scalars['ID']['input'];
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationAdd_Users_To_BoardArgs = {
   board_id: Scalars['ID']['input'];
@@ -4462,11 +4432,13 @@ export type MutationAdd_Users_To_BoardArgs = {
   user_ids: Array<Scalars['ID']['input']>;
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationAdd_Users_To_TeamArgs = {
   team_id: Scalars['ID']['input'];
   user_ids: Array<Scalars['ID']['input']>;
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationAdd_Users_To_WorkspaceArgs = {
@@ -4475,10 +4447,12 @@ export type MutationAdd_Users_To_WorkspaceArgs = {
   workspace_id: Scalars['ID']['input'];
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationArchive_BoardArgs = {
   board_id: Scalars['ID']['input'];
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationArchive_GroupArgs = {
@@ -4486,21 +4460,25 @@ export type MutationArchive_GroupArgs = {
   group_id: Scalars['String']['input'];
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationArchive_ItemArgs = {
   item_id?: InputMaybe<Scalars['ID']['input']>;
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationArchive_ObjectArgs = {
   id: Scalars['ID']['input'];
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationAssign_Team_OwnersArgs = {
   team_id: Scalars['ID']['input'];
   user_ids: Array<Scalars['ID']['input']>;
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationBatch_Extend_Trial_PeriodArgs = {
@@ -4510,6 +4488,7 @@ export type MutationBatch_Extend_Trial_PeriodArgs = {
   plan_id: Scalars['String']['input'];
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationChange_Column_MetadataArgs = {
   board_id: Scalars['ID']['input'];
@@ -4518,12 +4497,14 @@ export type MutationChange_Column_MetadataArgs = {
   value?: InputMaybe<Scalars['String']['input']>;
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationChange_Column_TitleArgs = {
   board_id: Scalars['ID']['input'];
   column_id: Scalars['String']['input'];
   title: Scalars['String']['input'];
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationChange_Column_ValueArgs = {
@@ -4534,6 +4515,7 @@ export type MutationChange_Column_ValueArgs = {
   value: Scalars['JSON']['input'];
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationChange_Item_PositionArgs = {
   group_id?: InputMaybe<Scalars['ID']['input']>;
@@ -4543,6 +4525,7 @@ export type MutationChange_Item_PositionArgs = {
   relative_to?: InputMaybe<Scalars['ID']['input']>;
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationChange_Multiple_Column_ValuesArgs = {
   board_id: Scalars['ID']['input'];
@@ -4550,6 +4533,7 @@ export type MutationChange_Multiple_Column_ValuesArgs = {
   create_labels_if_missing?: InputMaybe<Scalars['Boolean']['input']>;
   item_id?: InputMaybe<Scalars['ID']['input']>;
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationChange_Simple_Column_ValueArgs = {
@@ -4560,10 +4544,12 @@ export type MutationChange_Simple_Column_ValueArgs = {
   value?: InputMaybe<Scalars['String']['input']>;
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationClear_Item_UpdatesArgs = {
   item_id: Scalars['ID']['input'];
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationConnect_Project_To_PortfolioArgs = {
@@ -4571,15 +4557,18 @@ export type MutationConnect_Project_To_PortfolioArgs = {
   projectBoardId: Scalars['ID']['input'];
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationConvert_Board_To_ProjectArgs = {
   input: ConvertBoardToProjectInput;
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationCreate_AppArgs = {
   input: CreateAppInput;
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationCreate_App_FeatureArgs = {
@@ -4591,6 +4580,7 @@ export type MutationCreate_App_FeatureArgs = {
   slug: Scalars['String']['input'];
   type: AppFeatureTypeE;
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationCreate_BoardArgs = {
@@ -4608,6 +4598,7 @@ export type MutationCreate_BoardArgs = {
   workspace_id?: InputMaybe<Scalars['ID']['input']>;
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationCreate_ColumnArgs = {
   after_column_id?: InputMaybe<Scalars['ID']['input']>;
@@ -4620,12 +4611,14 @@ export type MutationCreate_ColumnArgs = {
   title: Scalars['String']['input'];
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationCreate_Custom_ActivityArgs = {
   color: CustomActivityColor;
   icon_id: CustomActivityIcon;
   name: Scalars['String']['input'];
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationCreate_DashboardArgs = {
@@ -4636,10 +4629,12 @@ export type MutationCreate_DashboardArgs = {
   workspace_id: Scalars['ID']['input'];
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationCreate_DocArgs = {
   location: CreateDocInput;
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationCreate_Doc_BlockArgs = {
@@ -4649,6 +4644,7 @@ export type MutationCreate_Doc_BlockArgs = {
   parent_block_id?: InputMaybe<Scalars['String']['input']>;
   type: DocBlockContentType;
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationCreate_Dropdown_ColumnArgs = {
@@ -4660,6 +4656,7 @@ export type MutationCreate_Dropdown_ColumnArgs = {
   title: Scalars['String']['input'];
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationCreate_Dropdown_Managed_ColumnArgs = {
   description?: InputMaybe<Scalars['String']['input']>;
@@ -4667,10 +4664,12 @@ export type MutationCreate_Dropdown_Managed_ColumnArgs = {
   title: Scalars['String']['input'];
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationCreate_FavoriteArgs = {
   input: CreateFavoriteInput;
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationCreate_FolderArgs = {
@@ -4681,6 +4680,7 @@ export type MutationCreate_FolderArgs = {
   parent_folder_id?: InputMaybe<Scalars['ID']['input']>;
   workspace_id?: InputMaybe<Scalars['ID']['input']>;
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationCreate_FormArgs = {
@@ -4695,17 +4695,20 @@ export type MutationCreate_FormArgs = {
   destination_workspace_id: Scalars['ID']['input'];
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationCreate_Form_QuestionArgs = {
   formToken: Scalars['String']['input'];
   question: CreateQuestionInput;
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationCreate_Form_TagArgs = {
   formToken: Scalars['String']['input'];
   tag: CreateFormTagInput;
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationCreate_GroupArgs = {
@@ -4716,6 +4719,7 @@ export type MutationCreate_GroupArgs = {
   position_relative_method?: InputMaybe<PositionRelative>;
   relative_to?: InputMaybe<Scalars['String']['input']>;
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationCreate_ItemArgs = {
@@ -4728,6 +4732,7 @@ export type MutationCreate_ItemArgs = {
   relative_to?: InputMaybe<Scalars['ID']['input']>;
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationCreate_NotificationArgs = {
   target_id: Scalars['ID']['input'];
@@ -4735,6 +4740,7 @@ export type MutationCreate_NotificationArgs = {
   text: Scalars['String']['input'];
   user_id: Scalars['ID']['input'];
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationCreate_ObjectArgs = {
@@ -4751,11 +4757,13 @@ export type MutationCreate_ObjectArgs = {
   workspace_id?: InputMaybe<Scalars['ID']['input']>;
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationCreate_Or_Get_TagArgs = {
   board_id?: InputMaybe<Scalars['ID']['input']>;
   tag_name?: InputMaybe<Scalars['String']['input']>;
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationCreate_PortfolioArgs = {
@@ -4763,6 +4771,7 @@ export type MutationCreate_PortfolioArgs = {
   boardPrivacy: Scalars['String']['input'];
   destinationWorkspaceId?: InputMaybe<Scalars['Int']['input']>;
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationCreate_Status_ColumnArgs = {
@@ -4775,12 +4784,14 @@ export type MutationCreate_Status_ColumnArgs = {
   title: Scalars['String']['input'];
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationCreate_Status_Managed_ColumnArgs = {
   description?: InputMaybe<Scalars['String']['input']>;
   settings?: InputMaybe<CreateStatusColumnSettingsInput>;
   title: Scalars['String']['input'];
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationCreate_SubitemArgs = {
@@ -4790,11 +4801,13 @@ export type MutationCreate_SubitemArgs = {
   parent_item_id: Scalars['ID']['input'];
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationCreate_TeamArgs = {
   input: CreateTeamAttributesInput;
   options?: InputMaybe<CreateTeamOptionsInput>;
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationCreate_Timeline_ItemArgs = {
@@ -4811,6 +4824,7 @@ export type MutationCreate_Timeline_ItemArgs = {
   user_id?: InputMaybe<Scalars['Int']['input']>;
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationCreate_UpdateArgs = {
   body: Scalars['String']['input'];
@@ -4820,6 +4834,7 @@ export type MutationCreate_UpdateArgs = {
   parent_id?: InputMaybe<Scalars['ID']['input']>;
   use_app_info?: InputMaybe<Scalars['Boolean']['input']>;
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationCreate_ViewArgs = {
@@ -4834,6 +4849,7 @@ export type MutationCreate_ViewArgs = {
   type: ViewKind;
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationCreate_View_TableArgs = {
   board_id: Scalars['ID']['input'];
@@ -4846,6 +4862,7 @@ export type MutationCreate_View_TableArgs = {
   tags?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationCreate_WebhookArgs = {
   board_id: Scalars['ID']['input'];
@@ -4853,6 +4870,7 @@ export type MutationCreate_WebhookArgs = {
   event: WebhookEventType;
   url: Scalars['String']['input'];
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationCreate_WidgetArgs = {
@@ -4863,6 +4881,7 @@ export type MutationCreate_WidgetArgs = {
   settings: Scalars['JSON']['input'];
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationCreate_WorkspaceArgs = {
   account_product_id?: InputMaybe<Scalars['ID']['input']>;
@@ -4871,25 +4890,30 @@ export type MutationCreate_WorkspaceArgs = {
   name: Scalars['String']['input'];
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationDeactivate_FormArgs = {
   formToken: Scalars['String']['input'];
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationDeactivate_Managed_ColumnArgs = {
   id: Scalars['String']['input'];
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationDeactivate_UsersArgs = {
   user_ids: Array<Scalars['ID']['input']>;
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationDelete_BoardArgs = {
   board_id: Scalars['ID']['input'];
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationDelete_ColumnArgs = {
@@ -4897,35 +4921,42 @@ export type MutationDelete_ColumnArgs = {
   column_id: Scalars['String']['input'];
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationDelete_Custom_ActivityArgs = {
   id: Scalars['String']['input'];
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationDelete_DashboardArgs = {
   id: Scalars['ID']['input'];
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationDelete_DocArgs = {
   docId: Scalars['ID']['input'];
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationDelete_Doc_BlockArgs = {
   block_id: Scalars['String']['input'];
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationDelete_FavoriteArgs = {
   input: DeleteFavoriteInput;
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationDelete_FolderArgs = {
   folder_id: Scalars['ID']['input'];
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationDelete_Form_TagArgs = {
@@ -4934,21 +4965,25 @@ export type MutationDelete_Form_TagArgs = {
   tagId: Scalars['String']['input'];
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationDelete_GroupArgs = {
   board_id: Scalars['ID']['input'];
   group_id: Scalars['String']['input'];
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationDelete_ItemArgs = {
   item_id?: InputMaybe<Scalars['ID']['input']>;
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationDelete_Managed_ColumnArgs = {
   id: Scalars['String']['input'];
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationDelete_Marketplace_App_DiscountArgs = {
@@ -4956,10 +4991,12 @@ export type MutationDelete_Marketplace_App_DiscountArgs = {
   app_id: Scalars['ID']['input'];
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationDelete_ObjectArgs = {
   id: Scalars['ID']['input'];
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationDelete_QuestionArgs = {
@@ -4967,16 +5004,19 @@ export type MutationDelete_QuestionArgs = {
   questionId: Scalars['String']['input'];
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationDelete_Subscribers_From_BoardArgs = {
   board_id: Scalars['ID']['input'];
   user_ids: Array<Scalars['ID']['input']>;
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationDelete_TeamArgs = {
   team_id: Scalars['ID']['input'];
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationDelete_Teams_From_BoardArgs = {
@@ -4984,21 +5024,25 @@ export type MutationDelete_Teams_From_BoardArgs = {
   team_ids: Array<Scalars['ID']['input']>;
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationDelete_Teams_From_WorkspaceArgs = {
   team_ids: Array<Scalars['ID']['input']>;
   workspace_id: Scalars['ID']['input'];
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationDelete_Timeline_ItemArgs = {
   id: Scalars['String']['input'];
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationDelete_UpdateArgs = {
   id: Scalars['ID']['input'];
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationDelete_Users_From_WorkspaceArgs = {
@@ -5006,26 +5050,31 @@ export type MutationDelete_Users_From_WorkspaceArgs = {
   workspace_id: Scalars['ID']['input'];
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationDelete_ViewArgs = {
   board_id: Scalars['ID']['input'];
   view_id: Scalars['ID']['input'];
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationDelete_WebhookArgs = {
   id: Scalars['ID']['input'];
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationDelete_WidgetArgs = {
   id: Scalars['ID']['input'];
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationDelete_WorkspaceArgs = {
   workspace_id: Scalars['ID']['input'];
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationDuplicate_BoardArgs = {
@@ -5037,11 +5086,13 @@ export type MutationDuplicate_BoardArgs = {
   workspace_id?: InputMaybe<Scalars['ID']['input']>;
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationDuplicate_DocArgs = {
   docId: Scalars['ID']['input'];
   duplicateType?: InputMaybe<DuplicateType>;
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationDuplicate_GroupArgs = {
@@ -5051,6 +5102,7 @@ export type MutationDuplicate_GroupArgs = {
   group_title?: InputMaybe<Scalars['String']['input']>;
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationDuplicate_ItemArgs = {
   board_id: Scalars['ID']['input'];
@@ -5058,11 +5110,13 @@ export type MutationDuplicate_ItemArgs = {
   with_updates?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationEdit_UpdateArgs = {
   body: Scalars['String']['input'];
   id: Scalars['ID']['input'];
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationExport_Markdown_From_DocArgs = {
@@ -5070,12 +5124,14 @@ export type MutationExport_Markdown_From_DocArgs = {
   docId: Scalars['ID']['input'];
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationGrant_Marketplace_App_DiscountArgs = {
   account_slug: Scalars['String']['input'];
   app_id: Scalars['ID']['input'];
   data: GrantMarketplaceAppDiscountData;
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationImport_Doc_From_HtmlArgs = {
@@ -5086,11 +5142,13 @@ export type MutationImport_Doc_From_HtmlArgs = {
   workspaceId: Scalars['ID']['input'];
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationIncrease_App_Subscription_OperationsArgs = {
   increment_by?: InputMaybe<Scalars['Int']['input']>;
   kind?: InputMaybe<Scalars['String']['input']>;
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationInvite_UsersArgs = {
@@ -5099,11 +5157,13 @@ export type MutationInvite_UsersArgs = {
   user_role?: InputMaybe<UserRole>;
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationLike_UpdateArgs = {
   reaction_type?: InputMaybe<Scalars['String']['input']>;
   update_id: Scalars['ID']['input'];
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationMove_Item_To_BoardArgs = {
@@ -5114,11 +5174,13 @@ export type MutationMove_Item_To_BoardArgs = {
   subitems_columns_mapping?: InputMaybe<Array<ColumnMappingInput>>;
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationMove_Item_To_GroupArgs = {
   group_id: Scalars['String']['input'];
   item_id?: InputMaybe<Scalars['ID']['input']>;
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationPin_To_TopArgs = {
@@ -5126,16 +5188,19 @@ export type MutationPin_To_TopArgs = {
   item_id?: InputMaybe<Scalars['ID']['input']>;
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationPublish_ObjectArgs = {
   id: Scalars['ID']['input'];
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationRemove_Mock_App_SubscriptionArgs = {
   app_id: Scalars['ID']['input'];
   partial_signing_secret: Scalars['String']['input'];
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationRemove_Required_ColumnArgs = {
@@ -5144,11 +5209,13 @@ export type MutationRemove_Required_ColumnArgs = {
   type?: InputMaybe<ValidationsEntityType>;
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationRemove_Team_OwnersArgs = {
   team_id: Scalars['ID']['input'];
   user_ids: Array<Scalars['ID']['input']>;
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationRemove_Users_From_TeamArgs = {
@@ -5156,17 +5223,20 @@ export type MutationRemove_Users_From_TeamArgs = {
   user_ids: Array<Scalars['ID']['input']>;
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationSet_Board_PermissionArgs = {
   basic_role_name: BoardBasicRoleName;
   board_id: Scalars['ID']['input'];
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationSet_Form_PasswordArgs = {
   formToken: Scalars['String']['input'];
   input: SetFormPasswordInput;
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationSet_Mock_App_SubscriptionArgs = {
@@ -5180,15 +5250,18 @@ export type MutationSet_Mock_App_SubscriptionArgs = {
   renewal_date?: InputMaybe<Scalars['Date']['input']>;
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationShorten_Form_UrlArgs = {
   formToken: Scalars['String']['input'];
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationUnlike_UpdateArgs = {
   update_id: Scalars['ID']['input'];
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationUnpin_From_TopArgs = {
@@ -5196,10 +5269,12 @@ export type MutationUnpin_From_TopArgs = {
   item_id?: InputMaybe<Scalars['ID']['input']>;
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationUnpublish_ObjectArgs = {
   id: Scalars['ID']['input'];
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationUpdate_AppArgs = {
@@ -5207,17 +5282,20 @@ export type MutationUpdate_AppArgs = {
   input: UpdateAppInput;
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationUpdate_App_FeatureArgs = {
   id: Scalars['ID']['input'];
   input: UpdateAppFeatureInput;
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationUpdate_Article_BlockArgs = {
   block_id: Scalars['String']['input'];
   content: Scalars['JSON']['input'];
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationUpdate_Assets_On_ItemArgs = {
@@ -5227,6 +5305,7 @@ export type MutationUpdate_Assets_On_ItemArgs = {
   item_id: Scalars['ID']['input'];
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationUpdate_BoardArgs = {
   board_attribute: BoardAttributes;
@@ -5234,11 +5313,13 @@ export type MutationUpdate_BoardArgs = {
   new_value: Scalars['String']['input'];
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationUpdate_Board_HierarchyArgs = {
   attributes: UpdateBoardHierarchyAttributesInput;
   board_id: Scalars['ID']['input'];
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationUpdate_ColumnArgs = {
@@ -5253,6 +5334,7 @@ export type MutationUpdate_ColumnArgs = {
   width?: InputMaybe<Scalars['Int']['input']>;
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationUpdate_DashboardArgs = {
   board_folder_id?: InputMaybe<Scalars['ID']['input']>;
@@ -5262,6 +5344,7 @@ export type MutationUpdate_DashboardArgs = {
   workspace_id?: InputMaybe<Scalars['ID']['input']>;
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationUpdate_Dependency_ColumnArgs = {
   boardId: Scalars['String']['input'];
@@ -5270,17 +5353,20 @@ export type MutationUpdate_Dependency_ColumnArgs = {
   value: DependencyValueInput;
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationUpdate_Doc_BlockArgs = {
   block_id: Scalars['String']['input'];
   content: Scalars['JSON']['input'];
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationUpdate_Doc_NameArgs = {
   docId: Scalars['ID']['input'];
   name: Scalars['String']['input'];
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationUpdate_Dropdown_ColumnArgs = {
@@ -5293,6 +5379,7 @@ export type MutationUpdate_Dropdown_ColumnArgs = {
   width?: InputMaybe<Scalars['Int']['input']>;
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationUpdate_Dropdown_Managed_ColumnArgs = {
   description?: InputMaybe<Scalars['String']['input']>;
@@ -5302,15 +5389,18 @@ export type MutationUpdate_Dropdown_Managed_ColumnArgs = {
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationUpdate_Email_DomainArgs = {
   input: UpdateEmailDomainAttributesInput;
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationUpdate_Favorite_PositionArgs = {
   input: UpdateObjectHierarchyPositionInput;
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationUpdate_FolderArgs = {
@@ -5325,11 +5415,13 @@ export type MutationUpdate_FolderArgs = {
   workspace_id?: InputMaybe<Scalars['ID']['input']>;
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationUpdate_FormArgs = {
   formToken: Scalars['String']['input'];
   input: UpdateFormInput;
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationUpdate_Form_QuestionArgs = {
@@ -5338,11 +5430,13 @@ export type MutationUpdate_Form_QuestionArgs = {
   questionId: Scalars['String']['input'];
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationUpdate_Form_SettingsArgs = {
   formToken: Scalars['String']['input'];
   settings: UpdateFormSettingsInput;
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationUpdate_Form_TagArgs = {
@@ -5350,6 +5444,7 @@ export type MutationUpdate_Form_TagArgs = {
   tag: UpdateFormTagInput;
   tagId: Scalars['String']['input'];
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationUpdate_GroupArgs = {
@@ -5359,14 +5454,14 @@ export type MutationUpdate_GroupArgs = {
   new_value: Scalars['String']['input'];
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationUpdate_Multiple_UsersArgs = {
-  bypass_confirmation_for_claimed_domains?: InputMaybe<
-    Scalars['Boolean']['input']
-  >;
+  bypass_confirmation_for_claimed_domains?: InputMaybe<Scalars['Boolean']['input']>;
   use_async_mode?: InputMaybe<Scalars['Boolean']['input']>;
   user_updates: Array<UserUpdateInput>;
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationUpdate_Mute_Board_SettingsArgs = {
@@ -5374,6 +5469,7 @@ export type MutationUpdate_Mute_Board_SettingsArgs = {
   enabled?: InputMaybe<Array<CustomizableBoardSettings>>;
   mute_state: BoardMuteState;
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationUpdate_Notification_SettingArgs = {
@@ -5384,17 +5480,20 @@ export type MutationUpdate_Notification_SettingArgs = {
   setting_kind: Scalars['String']['input'];
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationUpdate_ObjectArgs = {
   id: Scalars['String']['input'];
   input: UpdateObjectInput;
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationUpdate_Overview_HierarchyArgs = {
   attributes: UpdateOverviewHierarchyAttributesInput;
   overview_id: Scalars['ID']['input'];
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationUpdate_Status_ColumnArgs = {
@@ -5408,6 +5507,7 @@ export type MutationUpdate_Status_ColumnArgs = {
   width?: InputMaybe<Scalars['Int']['input']>;
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationUpdate_Status_Managed_ColumnArgs = {
   description?: InputMaybe<Scalars['String']['input']>;
@@ -5417,12 +5517,14 @@ export type MutationUpdate_Status_Managed_ColumnArgs = {
   title?: InputMaybe<Scalars['String']['input']>;
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationUpdate_Users_RoleArgs = {
   new_role?: InputMaybe<BaseRoleName>;
   role_id?: InputMaybe<Scalars['ID']['input']>;
   user_ids: Array<Scalars['ID']['input']>;
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationUpdate_ViewArgs = {
@@ -5438,6 +5540,7 @@ export type MutationUpdate_ViewArgs = {
   view_id: Scalars['ID']['input'];
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationUpdate_View_TableArgs = {
   board_id: Scalars['ID']['input'];
@@ -5451,11 +5554,13 @@ export type MutationUpdate_View_TableArgs = {
   view_id: Scalars['ID']['input'];
 };
 
+
 /** Root mutation type for the Dependencies service */
 export type MutationUpdate_WorkspaceArgs = {
   attributes: UpdateWorkspaceAttributesInput;
   id?: InputMaybe<Scalars['ID']['input']>;
 };
+
 
 /** Root mutation type for the Dependencies service */
 export type MutationUse_TemplateArgs = {
@@ -5463,9 +5568,7 @@ export type MutationUse_TemplateArgs = {
   board_owner_ids?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
   board_owner_team_ids?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
   board_subscriber_ids?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
-  board_subscriber_teams_ids?: InputMaybe<
-    Array<InputMaybe<Scalars['Int']['input']>>
-  >;
+  board_subscriber_teams_ids?: InputMaybe<Array<InputMaybe<Scalars['Int']['input']>>>;
   callback_url_on_complete?: InputMaybe<Scalars['String']['input']>;
   destination_folder_id?: InputMaybe<Scalars['Int']['input']>;
   destination_folder_name?: InputMaybe<Scalars['String']['input']>;
@@ -5516,7 +5619,7 @@ export enum NotificationTargetType {
   /** Update */
   Post = 'Post',
   /** Item or Board. */
-  Project = 'Project',
+  Project = 'Project'
 }
 
 /** A notification. */
@@ -5547,7 +5650,7 @@ export enum NumberValueUnitDirection {
   /** The symbol is placed on the left of the number */
   Left = 'left',
   /** The symbol is placed on the right of the number */
-  Right = 'right',
+  Right = 'right'
 }
 
 export type NumbersValue = ColumnValue & {
@@ -5617,7 +5720,7 @@ export enum ObjectState {
   /** The object is archived. */
   Archived = 'ARCHIVED',
   /** The object is deleted. */
-  Deleted = 'DELETED',
+  Deleted = 'DELETED'
 }
 
 /** Represents a monday object. */
@@ -5627,7 +5730,7 @@ export enum ObjectType {
   /** Represents a folder object type. */
   Folder = 'Folder',
   /** Represents an overview object type. */
-  Overview = 'Overview',
+  Overview = 'Overview'
 }
 
 /** Represents object type unique key and metadata. */
@@ -5648,7 +5751,7 @@ export enum OrderBy {
   /** Sort objects by their creation date, from newest to oldest. */
   CreatedAt = 'CREATED_AT',
   /** Sort objects by when they were last used, from most recent to least recent. */
-  UsedAt = 'USED_AT',
+  UsedAt = 'USED_AT'
 }
 
 /** The working status of a user. */
@@ -5856,7 +5959,7 @@ export enum PositionRelative {
   /** position after at the given entity. */
   AfterAt = 'after_at',
   /** position before at the given entity. */
-  BeforeAt = 'before_at',
+  BeforeAt = 'before_at'
 }
 
 /** Configuration for automatically populating question values from various data sources such as user account information or URL query parameters. */
@@ -5885,7 +5988,7 @@ export enum PrivacyKind {
   /** Private objects are only visible to specific users who are members of the object. */
   Private = 'PRIVATE',
   /** Public objects are visible to all users within the account, unless their access is blocked on a higher level in the hierarchy, or by specific object permission. */
-  Public = 'PUBLIC',
+  Public = 'PUBLIC'
 }
 
 /** The product to invite the users to. */
@@ -5897,7 +6000,7 @@ export enum Product {
   Service = 'service',
   Whiteboard = 'whiteboard',
   WorkManagement = 'work_management',
-  Workflows = 'workflows',
+  Workflows = 'workflows'
 }
 
 export type ProgressValue = ColumnValue & {
@@ -6104,6 +6207,7 @@ export type Query = {
   workspaces?: Maybe<Array<Maybe<Workspace>>>;
 };
 
+
 /** Root query type for the Dependencies service */
 export type QueryAccount_ConnectionsArgs = {
   order?: InputMaybe<Scalars['String']['input']>;
@@ -6114,10 +6218,12 @@ export type QueryAccount_ConnectionsArgs = {
   withStateValidation?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+
 /** Root query type for the Dependencies service */
 export type QueryAccount_Trigger_StatisticsArgs = {
   filters?: InputMaybe<AccountTriggerStatisticsFiltersInput>;
 };
+
 
 /** Root query type for the Dependencies service */
 export type QueryAccount_Triggers_Statistics_By_Entity_IdArgs = {
@@ -6125,15 +6231,18 @@ export type QueryAccount_Triggers_Statistics_By_Entity_IdArgs = {
   run_status: TriggerEventState;
 };
 
+
 /** Root query type for the Dependencies service */
 export type QueryAggregateArgs = {
   query: AggregateQueryInput;
 };
 
+
 /** Root query type for the Dependencies service */
 export type QueryAppArgs = {
   id: Scalars['ID']['input'];
 };
+
 
 /** Root query type for the Dependencies service */
 export type QueryApp_InstallsArgs = {
@@ -6143,10 +6252,12 @@ export type QueryApp_InstallsArgs = {
   page?: InputMaybe<Scalars['Int']['input']>;
 };
 
+
 /** Root query type for the Dependencies service */
 export type QueryApp_Subscription_OperationsArgs = {
   kind?: InputMaybe<Scalars['String']['input']>;
 };
+
 
 /** Root query type for the Dependencies service */
 export type QueryApp_SubscriptionsArgs = {
@@ -6157,10 +6268,12 @@ export type QueryApp_SubscriptionsArgs = {
   status?: InputMaybe<SubscriptionStatus>;
 };
 
+
 /** Root query type for the Dependencies service */
 export type QueryAssetsArgs = {
   ids: Array<Scalars['ID']['input']>;
 };
+
 
 /** Root query type for the Dependencies service */
 export type QueryAudit_LogsArgs = {
@@ -6173,17 +6286,20 @@ export type QueryAudit_LogsArgs = {
   user_id?: InputMaybe<Scalars['ID']['input']>;
 };
 
+
 /** Root query type for the Dependencies service */
 export type QueryBlock_EventsArgs = {
   nextPageOffset?: InputMaybe<Scalars['Int']['input']>;
   triggerUuid: Scalars['String']['input'];
 };
 
+
 /** Root query type for the Dependencies service */
 export type QueryBoard_CandidatesArgs = {
   usageType: BoardUsage;
   workspaceId: Scalars['String']['input'];
 };
+
 
 /** Root query type for the Dependencies service */
 export type QueryBoardsArgs = {
@@ -6198,15 +6314,18 @@ export type QueryBoardsArgs = {
   workspace_ids?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
 };
 
+
 /** Root query type for the Dependencies service */
 export type QueryConnectionArgs = {
   id: Scalars['Int']['input'];
 };
 
+
 /** Root query type for the Dependencies service */
 export type QueryConnection_Board_IdsArgs = {
   connectionId: Scalars['Int']['input'];
 };
+
 
 /** Root query type for the Dependencies service */
 export type QueryConnectionsArgs = {
@@ -6220,6 +6339,7 @@ export type QueryConnectionsArgs = {
   withStateValidation?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+
 /** Root query type for the Dependencies service */
 export type QueryCustom_ActivityArgs = {
   color?: InputMaybe<CustomActivityColor>;
@@ -6227,6 +6347,7 @@ export type QueryCustom_ActivityArgs = {
   ids?: InputMaybe<Array<Scalars['String']['input']>>;
   name?: InputMaybe<Scalars['String']['input']>;
 };
+
 
 /** Root query type for the Dependencies service */
 export type QueryDocsArgs = {
@@ -6238,16 +6359,19 @@ export type QueryDocsArgs = {
   workspace_ids?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
 };
 
+
 /** Root query type for the Dependencies service */
 export type QueryExport_GraphArgs = {
   boardId: Scalars['String']['input'];
 };
+
 
 /** Root query type for the Dependencies service */
 export type QueryExport_Markdown_From_DocArgs = {
   blockIds?: InputMaybe<Array<Scalars['String']['input']>>;
   docId: Scalars['ID']['input'];
 };
+
 
 /** Root query type for the Dependencies service */
 export type QueryFoldersArgs = {
@@ -6257,21 +6381,25 @@ export type QueryFoldersArgs = {
   workspace_ids?: InputMaybe<Array<InputMaybe<Scalars['ID']['input']>>>;
 };
 
+
 /** Root query type for the Dependencies service */
 export type QueryFormArgs = {
   formToken: Scalars['String']['input'];
 };
+
 
 /** Root query type for the Dependencies service */
 export type QueryGet_Column_Type_SchemaArgs = {
   type: ColumnType;
 };
 
+
 /** Root query type for the Dependencies service */
 export type QueryGet_View_Schema_By_TypeArgs = {
   mutationType: ViewMutationKind;
   type: ViewKind;
 };
+
 
 /** Root query type for the Dependencies service */
 export type QueryItemsArgs = {
@@ -6282,6 +6410,7 @@ export type QueryItemsArgs = {
   page?: InputMaybe<Scalars['Int']['input']>;
 };
 
+
 /** Root query type for the Dependencies service */
 export type QueryItems_Page_By_Column_ValuesArgs = {
   board_id: Scalars['ID']['input'];
@@ -6291,47 +6420,56 @@ export type QueryItems_Page_By_Column_ValuesArgs = {
   limit?: Scalars['Int']['input'];
 };
 
+
 /** Root query type for the Dependencies service */
 export type QueryManaged_ColumnArgs = {
   id?: InputMaybe<Array<Scalars['String']['input']>>;
   state?: InputMaybe<Array<ManagedColumnState>>;
 };
 
+
 /** Root query type for the Dependencies service */
 export type QueryMarketplace_Ai_SearchArgs = {
   input: MarketplaceAiSearchInput;
 };
+
 
 /** Root query type for the Dependencies service */
 export type QueryMarketplace_App_DiscountsArgs = {
   app_id: Scalars['ID']['input'];
 };
 
+
 /** Root query type for the Dependencies service */
 export type QueryMarketplace_Fulltext_SearchArgs = {
   input: MarketplaceSearchInput;
 };
+
 
 /** Root query type for the Dependencies service */
 export type QueryMarketplace_Hybrid_SearchArgs = {
   input: MarketplaceSearchInput;
 };
 
+
 /** Root query type for the Dependencies service */
 export type QueryMarketplace_Vector_SearchArgs = {
   input: MarketplaceSearchInput;
 };
+
 
 /** Root query type for the Dependencies service */
 export type QueryMute_Board_SettingsArgs = {
   board_ids: Array<Scalars['ID']['input']>;
 };
 
+
 /** Root query type for the Dependencies service */
 export type QueryNext_Items_PageArgs = {
   cursor: Scalars['String']['input'];
   limit?: Scalars['Int']['input'];
 };
+
 
 /** Root query type for the Dependencies service */
 export type QueryNotificationsArgs = {
@@ -6341,6 +6479,7 @@ export type QueryNotificationsArgs = {
   since?: InputMaybe<Scalars['ISO8601DateTime']['input']>;
 };
 
+
 /** Root query type for the Dependencies service */
 export type QueryNotifications_SettingsArgs = {
   channels?: InputMaybe<Array<ChannelType>>;
@@ -6348,6 +6487,7 @@ export type QueryNotifications_SettingsArgs = {
   scope_type: ScopeType;
   setting_kinds?: InputMaybe<Array<Scalars['String']['input']>>;
 };
+
 
 /** Root query type for the Dependencies service */
 export type QueryObjectsArgs = {
@@ -6360,6 +6500,7 @@ export type QueryObjectsArgs = {
   workspace_ids?: InputMaybe<Array<Scalars['ID']['input']>>;
 };
 
+
 /** Root query type for the Dependencies service */
 export type QueryRepliesArgs = {
   board_ids: Array<Scalars['ID']['input']>;
@@ -6369,20 +6510,24 @@ export type QueryRepliesArgs = {
   page?: InputMaybe<Scalars['Int']['input']>;
 };
 
+
 /** Root query type for the Dependencies service */
 export type QuerySprintsArgs = {
   ids: Array<Scalars['ID']['input']>;
 };
+
 
 /** Root query type for the Dependencies service */
 export type QueryTagsArgs = {
   ids?: InputMaybe<Array<Scalars['ID']['input']>>;
 };
 
+
 /** Root query type for the Dependencies service */
 export type QueryTeamsArgs = {
   ids?: InputMaybe<Array<Scalars['ID']['input']>>;
 };
+
 
 /** Root query type for the Dependencies service */
 export type QueryTimelineArgs = {
@@ -6390,21 +6535,25 @@ export type QueryTimelineArgs = {
   skipConnectedItems?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+
 /** Root query type for the Dependencies service */
 export type QueryTimeline_ItemArgs = {
   id: Scalars['ID']['input'];
 };
+
 
 /** Root query type for the Dependencies service */
 export type QueryTrigger_EventArgs = {
   triggerUuid: Scalars['String']['input'];
 };
 
+
 /** Root query type for the Dependencies service */
 export type QueryTrigger_EventsArgs = {
   filters?: InputMaybe<TriggerEventsFiltersInput>;
   nextPageOffset?: InputMaybe<Scalars['Int']['input']>;
 };
+
 
 /** Root query type for the Dependencies service */
 export type QueryUpdatesArgs = {
@@ -6415,6 +6564,7 @@ export type QueryUpdatesArgs = {
   to_date?: InputMaybe<Scalars['String']['input']>;
 };
 
+
 /** Root query type for the Dependencies service */
 export type QueryUser_ConnectionsArgs = {
   order?: InputMaybe<Scalars['String']['input']>;
@@ -6424,6 +6574,7 @@ export type QueryUser_ConnectionsArgs = {
   withAutomations?: InputMaybe<Scalars['Boolean']['input']>;
   withStateValidation?: InputMaybe<Scalars['Boolean']['input']>;
 };
+
 
 /** Root query type for the Dependencies service */
 export type QueryUsersArgs = {
@@ -6437,17 +6588,20 @@ export type QueryUsersArgs = {
   page?: InputMaybe<Scalars['Int']['input']>;
 };
 
+
 /** Root query type for the Dependencies service */
 export type QueryValidationsArgs = {
   id: Scalars['ID']['input'];
   type?: InputMaybe<ValidationsEntityType>;
 };
 
+
 /** Root query type for the Dependencies service */
 export type QueryWebhooksArgs = {
   app_webhooks_only?: InputMaybe<Scalars['Boolean']['input']>;
   board_id: Scalars['ID']['input'];
 };
+
 
 /** Root query type for the Dependencies service */
 export type QueryWorkspacesArgs = {
@@ -6505,7 +6659,7 @@ export enum RemoveTeamOwnersErrorCode {
   InvalidInput = 'INVALID_INPUT',
   UserNotFound = 'USER_NOT_FOUND',
   UserNotMemberOfTeam = 'USER_NOT_MEMBER_OF_TEAM',
-  ViewersOrGuests = 'VIEWERS_OR_GUESTS',
+  ViewersOrGuests = 'VIEWERS_OR_GUESTS'
 }
 
 /** Result of removing the team's ownership. */
@@ -6542,6 +6696,7 @@ export type Reply = {
   updated_at?: Maybe<Scalars['Date']['output']>;
   viewers: Array<Watcher>;
 };
+
 
 /** A reply for an update. */
 export type ReplyViewersArgs = {
@@ -6591,7 +6746,7 @@ export type ResponseForm = {
 /** notification settings scope types, the options are account user defaults or user private settings */
 export enum ScopeType {
   AccountNewUserDefaults = 'AccountNewUserDefaults',
-  User = 'User',
+  User = 'User'
 }
 
 /** Response type for detailed board permissions. Contains information about the permissions that were set. */
@@ -6614,7 +6769,7 @@ export enum SortDirection {
   /** Ascending order */
   Asc = 'ASC',
   /** Descending order */
-  Desc = 'DESC',
+  Desc = 'DESC'
 }
 
 /** A monday dev sprint. */
@@ -6637,6 +6792,7 @@ export type Sprint = {
   /** user-editable planned timeline for the monday dev sprint, which may differ from its start and complete dates */
   timeline?: Maybe<SprintTimeline>;
 };
+
 
 /** A monday dev sprint. */
 export type SprintSnapshotsArgs = {
@@ -6696,7 +6852,7 @@ export enum SprintSnapshotKind {
   /** Sprint complete snapshot kind. */
   Complete = 'COMPLETE',
   /** Sprint start snapshot kind. */
-  Start = 'START',
+  Start = 'START'
 }
 
 /** current state of the monday dev sprint. */
@@ -6706,7 +6862,7 @@ export enum SprintState {
   /** sprint is completed. */
   Completed = 'COMPLETED',
   /** sprint is planned and not yet started. */
-  Planned = 'PLANNED',
+  Planned = 'PLANNED'
 }
 
 /** user-editable planned timeline for the monday dev sprint, which may differ from its start and complete dates */
@@ -6727,7 +6883,7 @@ export enum State {
   /** Archived only. */
   Archived = 'archived',
   /** Deleted only. */
-  Deleted = 'deleted',
+  Deleted = 'deleted'
 }
 
 /** Input for configuring calculated capability settings on a status column */
@@ -6739,7 +6895,7 @@ export type StatusCalculatedCapabilityInput = {
 /** Available functions for calculating values in status column capabilities */
 export enum StatusCalculatedFunction {
   /** Count the number of labels */
-  CountKeys = 'COUNT_KEYS',
+  CountKeys = 'COUNT_KEYS'
 }
 
 /** Input for configuring status column capabilities during creation */
@@ -6788,7 +6944,7 @@ export enum StatusColumnColors {
   Tan = 'tan',
   Teal = 'teal',
   Winter = 'winter',
-  WorkingOrange = 'working_orange',
+  WorkingOrange = 'working_orange'
 }
 
 export type StatusColumnSettings = {
@@ -6862,7 +7018,7 @@ export enum SubscriberKind {
   /** User will be added as an owner of the object, granting them full control permissions. */
   Owner = 'OWNER',
   /** User will be added as a subscriber to the object, receiving notifications about changes. */
-  Subscriber = 'SUBSCRIBER',
+  Subscriber = 'SUBSCRIBER'
 }
 
 /** The discounts granted to the subscription */
@@ -6877,25 +7033,25 @@ export type SubscriptionDiscount = {
 /** The information whether the discount is percentage or nominal */
 export enum SubscriptionDiscountModelType {
   Nominal = 'nominal',
-  Percent = 'percent',
+  Percent = 'percent'
 }
 
 /** The information whether the discount has been granted one time or recurring */
 export enum SubscriptionDiscountType {
   OneTime = 'one_time',
-  Recurring = 'recurring',
+  Recurring = 'recurring'
 }
 
 /** The billing period of the subscription. Possible values: monthly, yearly */
 export enum SubscriptionPeriodType {
   Monthly = 'monthly',
-  Yearly = 'yearly',
+  Yearly = 'yearly'
 }
 
 /** The status of the subscription. Possible values: active, inactive. */
 export enum SubscriptionStatus {
   Active = 'active',
-  Inactive = 'inactive',
+  Inactive = 'inactive'
 }
 
 export type SubtasksValue = ColumnValue & {
@@ -6971,10 +7127,12 @@ export type Team = {
   users?: Maybe<Array<Maybe<User>>>;
 };
 
+
 /** A team of users. */
 export type TeamOwnersArgs = {
   ids?: InputMaybe<Array<Scalars['ID']['input']>>;
 };
+
 
 /** A team of users. */
 export type TeamUsersArgs = {
@@ -7116,6 +7274,7 @@ export type TimelineResponse = {
   timeline_items_page: TimelineItemsPage;
 };
 
+
 export type TimelineResponseTimeline_Items_PageArgs = {
   cursor?: InputMaybe<Scalars['String']['input']>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -7187,7 +7346,7 @@ export enum TriggerEventState {
   /** Automation run failed */
   Failure = 'failure',
   /** Automation run completed successfully */
-  Success = 'success',
+  Success = 'success'
 }
 
 /** Filters for querying trigger events */
@@ -7278,6 +7437,7 @@ export type Update = {
   updated_at?: Maybe<Scalars['Date']['output']>;
   viewers: Array<Watcher>;
 };
+
 
 /** An update. */
 export type UpdateViewersArgs = {
@@ -7382,7 +7542,7 @@ export enum UpdateEmailDomainErrorCode {
   Failed = 'FAILED',
   InvalidInput = 'INVALID_INPUT',
   UpdateEmailDomainError = 'UPDATE_EMAIL_DOMAIN_ERROR',
-  UserNotFound = 'USER_NOT_FOUND',
+  UserNotFound = 'USER_NOT_FOUND'
 }
 
 /** Result of updating the email domain for the specified users. */
@@ -7521,7 +7681,7 @@ export type UpdateUserAttributesError = {
 
 /** Error codes that can occur while updating user attributes. */
 export enum UpdateUserAttributesErrorCode {
-  InvalidField = 'INVALID_FIELD',
+  InvalidField = 'INVALID_FIELD'
 }
 
 /** The result of updating users attributes. */
@@ -7550,7 +7710,7 @@ export enum UpdateUsersRoleErrorCode {
   ExceedsBatchLimit = 'EXCEEDS_BATCH_LIMIT',
   Failed = 'FAILED',
   InvalidInput = 'INVALID_INPUT',
-  UserNotFound = 'USER_NOT_FOUND',
+  UserNotFound = 'USER_NOT_FOUND'
 }
 
 /** Result of updating users role. */
@@ -7649,6 +7809,7 @@ export type User = {
   utc_hours_diff?: Maybe<Scalars['Int']['output']>;
 };
 
+
 /** A monday.com user. */
 export type UserTeamsArgs = {
   ids?: InputMaybe<Array<Scalars['ID']['input']>>;
@@ -7685,7 +7846,7 @@ export enum UserKind {
   /** Only company members. */
   NonGuests = 'non_guests',
   /** All non pending members. */
-  NonPending = 'non_pending',
+  NonPending = 'non_pending'
 }
 
 /** The role of the user. */
@@ -7693,7 +7854,7 @@ export enum UserRole {
   Admin = 'ADMIN',
   Guest = 'GUEST',
   Member = 'MEMBER',
-  ViewOnly = 'VIEW_ONLY',
+  ViewOnly = 'VIEW_ONLY'
 }
 
 export type UserUpdateInput = {
@@ -7710,7 +7871,7 @@ export type Validations = {
 };
 
 export enum ValidationsEntityType {
-  Board = 'board',
+  Board = 'board'
 }
 
 /** An object containing the API version details */
@@ -7741,7 +7902,7 @@ export enum VersionKind {
   /** Older version that will be deprecated in January. Migrate to current version as soon as possible */
   PreviousMaintenance = 'previous_maintenance',
   /** Next version */
-  ReleaseCandidate = 'release_candidate',
+  ReleaseCandidate = 'release_candidate'
 }
 
 /** Available view types for board displays */
@@ -7753,7 +7914,7 @@ export enum ViewKind {
   /** Form view for input and data entry */
   Form = 'FORM',
   /** Table view for displaying items in a structured table format */
-  Table = 'TABLE',
+  Table = 'TABLE'
 }
 
 /** Type of mutation operation */
@@ -7761,7 +7922,7 @@ export enum ViewMutationKind {
   /** Create operation */
   Create = 'CREATE',
   /** Update operation */
-  Update = 'UPDATE',
+  Update = 'UPDATE'
 }
 
 export type VoteValue = ColumnValue & {
@@ -7849,7 +8010,7 @@ export enum WebhookEventType {
   /** A subitem was archived on a board */
   SubitemArchived = 'subitem_archived',
   /** A subitem was deleted from a board */
-  SubitemDeleted = 'subitem_deleted',
+  SubitemDeleted = 'subitem_deleted'
 }
 
 export type WeekValue = ColumnValue & {
@@ -7896,7 +8057,7 @@ export enum WidgetParentKind {
   /** Widget placed in a specific board view */
   BoardView = 'BOARD_VIEW',
   /** Widget placed in a dashboard */
-  Dashboard = 'DASHBOARD',
+  Dashboard = 'DASHBOARD'
 }
 
 /** Parent container information in widget responses. Indicates where the widget is placed. */
@@ -7948,11 +8109,13 @@ export type Workspace = {
   users_subscribers?: Maybe<Array<Maybe<User>>>;
 };
 
+
 /** A monday.com workspace. */
 export type WorkspaceOwners_SubscribersArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   page?: InputMaybe<Scalars['Int']['input']>;
 };
+
 
 /** A monday.com workspace. */
 export type WorkspaceTeam_Owners_SubscribersArgs = {
@@ -7960,11 +8123,13 @@ export type WorkspaceTeam_Owners_SubscribersArgs = {
   page?: InputMaybe<Scalars['Int']['input']>;
 };
 
+
 /** A monday.com workspace. */
 export type WorkspaceTeams_SubscribersArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   page?: InputMaybe<Scalars['Int']['input']>;
 };
+
 
 /** A monday.com workspace. */
 export type WorkspaceUsers_SubscribersArgs = {
@@ -7992,7 +8157,7 @@ export enum WorkspaceKind {
   /** Open workspace. */
   Open = 'open',
   /** Template workspace. */
-  Template = 'template',
+  Template = 'template'
 }
 
 /** The workspace's settings. */
@@ -8007,13 +8172,13 @@ export enum WorkspaceSubscriberKind {
   /** Workspace owner. */
   Owner = 'owner',
   /** Workspace subscriber. */
-  Subscriber = 'subscriber',
+  Subscriber = 'subscriber'
 }
 
 /** Options to order by. */
 export enum WorkspacesOrderBy {
   /** The rank order of the workspace creation time (desc). */
-  CreatedAt = 'created_at',
+  CreatedAt = 'created_at'
 }
 
 export type WorldClockValue = ColumnValue & {
@@ -8033,278 +8198,96 @@ export type WorldClockValue = ColumnValue & {
   value?: Maybe<Scalars['JSON']['output']>;
 };
 
-type DisplayValue_BatteryValue_Fragment = {
-  __typename: 'BatteryValue';
-  type: ColumnType;
-};
+type DisplayValue_BatteryValue_Fragment = { __typename: 'BatteryValue', type: ColumnType };
 
-type DisplayValue_BoardRelationValue_Fragment = {
-  __typename: 'BoardRelationValue';
-  display_value: string;
-  linked_item_ids: Array<string>;
-  type: ColumnType;
-};
+type DisplayValue_BoardRelationValue_Fragment = { __typename: 'BoardRelationValue', display_value: string, linked_item_ids: Array<string>, type: ColumnType };
 
-type DisplayValue_ButtonValue_Fragment = {
-  __typename: 'ButtonValue';
-  type: ColumnType;
-};
+type DisplayValue_ButtonValue_Fragment = { __typename: 'ButtonValue', type: ColumnType };
 
-type DisplayValue_CheckboxValue_Fragment = {
-  __typename: 'CheckboxValue';
-  type: ColumnType;
-};
+type DisplayValue_CheckboxValue_Fragment = { __typename: 'CheckboxValue', type: ColumnType };
 
-type DisplayValue_ColorPickerValue_Fragment = {
-  __typename: 'ColorPickerValue';
-  type: ColumnType;
-};
+type DisplayValue_ColorPickerValue_Fragment = { __typename: 'ColorPickerValue', type: ColumnType };
 
-type DisplayValue_CountryValue_Fragment = {
-  __typename: 'CountryValue';
-  type: ColumnType;
-};
+type DisplayValue_CountryValue_Fragment = { __typename: 'CountryValue', type: ColumnType };
 
-type DisplayValue_CreationLogValue_Fragment = {
-  __typename: 'CreationLogValue';
-  type: ColumnType;
-};
+type DisplayValue_CreationLogValue_Fragment = { __typename: 'CreationLogValue', type: ColumnType };
 
-type DisplayValue_DateValue_Fragment = {
-  __typename: 'DateValue';
-  date?: string | null;
-  type: ColumnType;
-};
+type DisplayValue_DateValue_Fragment = { __typename: 'DateValue', date?: string | null, type: ColumnType };
 
-type DisplayValue_DependencyValue_Fragment = {
-  __typename: 'DependencyValue';
-  type: ColumnType;
-};
+type DisplayValue_DependencyValue_Fragment = { __typename: 'DependencyValue', type: ColumnType };
 
-type DisplayValue_DirectDocValue_Fragment = {
-  __typename: 'DirectDocValue';
-  type: ColumnType;
-};
+type DisplayValue_DirectDocValue_Fragment = { __typename: 'DirectDocValue', type: ColumnType };
 
-type DisplayValue_DocValue_Fragment = {
-  __typename: 'DocValue';
-  type: ColumnType;
-};
+type DisplayValue_DocValue_Fragment = { __typename: 'DocValue', type: ColumnType };
 
-type DisplayValue_DropdownValue_Fragment = {
-  __typename: 'DropdownValue';
-  type: ColumnType;
-  values: Array<{
-    __typename?: 'DropdownValueOption';
-    id: string;
-    label: string;
-  }>;
-};
+type DisplayValue_DropdownValue_Fragment = { __typename: 'DropdownValue', type: ColumnType, values: Array<{ __typename?: 'DropdownValueOption', id: string, label: string }> };
 
-type DisplayValue_EmailValue_Fragment = {
-  __typename: 'EmailValue';
-  type: ColumnType;
-};
+type DisplayValue_EmailValue_Fragment = { __typename: 'EmailValue', type: ColumnType };
 
-type DisplayValue_FileValue_Fragment = {
-  __typename: 'FileValue';
-  type: ColumnType;
-};
+type DisplayValue_FileValue_Fragment = { __typename: 'FileValue', type: ColumnType };
 
-type DisplayValue_FormulaValue_Fragment = {
-  __typename: 'FormulaValue';
-  display_value: string;
-  type: ColumnType;
-};
+type DisplayValue_FormulaValue_Fragment = { __typename: 'FormulaValue', display_value: string, type: ColumnType };
 
-type DisplayValue_GroupValue_Fragment = {
-  __typename: 'GroupValue';
-  type: ColumnType;
-};
+type DisplayValue_GroupValue_Fragment = { __typename: 'GroupValue', type: ColumnType };
 
-type DisplayValue_HourValue_Fragment = {
-  __typename: 'HourValue';
-  type: ColumnType;
-};
+type DisplayValue_HourValue_Fragment = { __typename: 'HourValue', type: ColumnType };
 
-type DisplayValue_IntegrationValue_Fragment = {
-  __typename: 'IntegrationValue';
-  type: ColumnType;
-};
+type DisplayValue_IntegrationValue_Fragment = { __typename: 'IntegrationValue', type: ColumnType };
 
-type DisplayValue_ItemIdValue_Fragment = {
-  __typename: 'ItemIdValue';
-  type: ColumnType;
-};
+type DisplayValue_ItemIdValue_Fragment = { __typename: 'ItemIdValue', type: ColumnType };
 
-type DisplayValue_LastUpdatedValue_Fragment = {
-  __typename: 'LastUpdatedValue';
-  type: ColumnType;
-};
+type DisplayValue_LastUpdatedValue_Fragment = { __typename: 'LastUpdatedValue', type: ColumnType };
 
-type DisplayValue_LinkValue_Fragment = {
-  __typename: 'LinkValue';
-  type: ColumnType;
-};
+type DisplayValue_LinkValue_Fragment = { __typename: 'LinkValue', type: ColumnType };
 
-type DisplayValue_LocationValue_Fragment = {
-  __typename: 'LocationValue';
-  address?: string | null;
-  city?: string | null;
-  country_short?: string | null;
-  street_number?: string | null;
-  street?: string | null;
-  type: ColumnType;
-};
+type DisplayValue_LocationValue_Fragment = { __typename: 'LocationValue', address?: string | null, city?: string | null, country_short?: string | null, street_number?: string | null, street?: string | null, type: ColumnType };
 
-type DisplayValue_LongTextValue_Fragment = {
-  __typename: 'LongTextValue';
-  type: ColumnType;
-};
+type DisplayValue_LongTextValue_Fragment = { __typename: 'LongTextValue', type: ColumnType };
 
-type DisplayValue_MirrorValue_Fragment = {
-  __typename: 'MirrorValue';
-  display_value: string;
-  type: ColumnType;
-};
+type DisplayValue_MirrorValue_Fragment = { __typename: 'MirrorValue', display_value: string, type: ColumnType };
 
-type DisplayValue_NumbersValue_Fragment = {
-  __typename: 'NumbersValue';
-  type: ColumnType;
-};
+type DisplayValue_NumbersValue_Fragment = { __typename: 'NumbersValue', type: ColumnType };
 
-type DisplayValue_PeopleValue_Fragment = {
-  __typename: 'PeopleValue';
-  type: ColumnType;
-};
+type DisplayValue_PeopleValue_Fragment = { __typename: 'PeopleValue', type: ColumnType };
 
-type DisplayValue_PersonValue_Fragment = {
-  __typename: 'PersonValue';
-  type: ColumnType;
-};
+type DisplayValue_PersonValue_Fragment = { __typename: 'PersonValue', type: ColumnType };
 
-type DisplayValue_PhoneValue_Fragment = {
-  __typename: 'PhoneValue';
-  type: ColumnType;
-};
+type DisplayValue_PhoneValue_Fragment = { __typename: 'PhoneValue', type: ColumnType };
 
-type DisplayValue_ProgressValue_Fragment = {
-  __typename: 'ProgressValue';
-  type: ColumnType;
-};
+type DisplayValue_ProgressValue_Fragment = { __typename: 'ProgressValue', type: ColumnType };
 
-type DisplayValue_RatingValue_Fragment = {
-  __typename: 'RatingValue';
-  type: ColumnType;
-};
+type DisplayValue_RatingValue_Fragment = { __typename: 'RatingValue', type: ColumnType };
 
-type DisplayValue_StatusValue_Fragment = {
-  __typename: 'StatusValue';
-  index?: number | null;
-  type: ColumnType;
-};
+type DisplayValue_StatusValue_Fragment = { __typename: 'StatusValue', index?: number | null, type: ColumnType };
 
-type DisplayValue_SubtasksValue_Fragment = {
-  __typename: 'SubtasksValue';
-  type: ColumnType;
-};
+type DisplayValue_SubtasksValue_Fragment = { __typename: 'SubtasksValue', type: ColumnType };
 
-type DisplayValue_TagsValue_Fragment = {
-  __typename: 'TagsValue';
-  type: ColumnType;
-};
+type DisplayValue_TagsValue_Fragment = { __typename: 'TagsValue', type: ColumnType };
 
-type DisplayValue_TeamValue_Fragment = {
-  __typename: 'TeamValue';
-  type: ColumnType;
-};
+type DisplayValue_TeamValue_Fragment = { __typename: 'TeamValue', type: ColumnType };
 
-type DisplayValue_TextValue_Fragment = {
-  __typename: 'TextValue';
-  type: ColumnType;
-};
+type DisplayValue_TextValue_Fragment = { __typename: 'TextValue', type: ColumnType };
 
-type DisplayValue_TimeTrackingValue_Fragment = {
-  __typename: 'TimeTrackingValue';
-  type: ColumnType;
-};
+type DisplayValue_TimeTrackingValue_Fragment = { __typename: 'TimeTrackingValue', type: ColumnType };
 
-type DisplayValue_TimelineValue_Fragment = {
-  __typename: 'TimelineValue';
-  type: ColumnType;
-};
+type DisplayValue_TimelineValue_Fragment = { __typename: 'TimelineValue', type: ColumnType };
 
-type DisplayValue_UnsupportedValue_Fragment = {
-  __typename: 'UnsupportedValue';
-  type: ColumnType;
-};
+type DisplayValue_UnsupportedValue_Fragment = { __typename: 'UnsupportedValue', type: ColumnType };
 
-type DisplayValue_VoteValue_Fragment = {
-  __typename: 'VoteValue';
-  type: ColumnType;
-};
+type DisplayValue_VoteValue_Fragment = { __typename: 'VoteValue', type: ColumnType };
 
-type DisplayValue_WeekValue_Fragment = {
-  __typename: 'WeekValue';
-  type: ColumnType;
-};
+type DisplayValue_WeekValue_Fragment = { __typename: 'WeekValue', type: ColumnType };
 
-type DisplayValue_WorldClockValue_Fragment = {
-  __typename: 'WorldClockValue';
-  type: ColumnType;
-};
+type DisplayValue_WorldClockValue_Fragment = { __typename: 'WorldClockValue', type: ColumnType };
 
-export type DisplayValueFragment =
-  | DisplayValue_BatteryValue_Fragment
-  | DisplayValue_BoardRelationValue_Fragment
-  | DisplayValue_ButtonValue_Fragment
-  | DisplayValue_CheckboxValue_Fragment
-  | DisplayValue_ColorPickerValue_Fragment
-  | DisplayValue_CountryValue_Fragment
-  | DisplayValue_CreationLogValue_Fragment
-  | DisplayValue_DateValue_Fragment
-  | DisplayValue_DependencyValue_Fragment
-  | DisplayValue_DirectDocValue_Fragment
-  | DisplayValue_DocValue_Fragment
-  | DisplayValue_DropdownValue_Fragment
-  | DisplayValue_EmailValue_Fragment
-  | DisplayValue_FileValue_Fragment
-  | DisplayValue_FormulaValue_Fragment
-  | DisplayValue_GroupValue_Fragment
-  | DisplayValue_HourValue_Fragment
-  | DisplayValue_IntegrationValue_Fragment
-  | DisplayValue_ItemIdValue_Fragment
-  | DisplayValue_LastUpdatedValue_Fragment
-  | DisplayValue_LinkValue_Fragment
-  | DisplayValue_LocationValue_Fragment
-  | DisplayValue_LongTextValue_Fragment
-  | DisplayValue_MirrorValue_Fragment
-  | DisplayValue_NumbersValue_Fragment
-  | DisplayValue_PeopleValue_Fragment
-  | DisplayValue_PersonValue_Fragment
-  | DisplayValue_PhoneValue_Fragment
-  | DisplayValue_ProgressValue_Fragment
-  | DisplayValue_RatingValue_Fragment
-  | DisplayValue_StatusValue_Fragment
-  | DisplayValue_SubtasksValue_Fragment
-  | DisplayValue_TagsValue_Fragment
-  | DisplayValue_TeamValue_Fragment
-  | DisplayValue_TextValue_Fragment
-  | DisplayValue_TimeTrackingValue_Fragment
-  | DisplayValue_TimelineValue_Fragment
-  | DisplayValue_UnsupportedValue_Fragment
-  | DisplayValue_VoteValue_Fragment
-  | DisplayValue_WeekValue_Fragment
-  | DisplayValue_WorldClockValue_Fragment;
+export type DisplayValueFragment = DisplayValue_BatteryValue_Fragment | DisplayValue_BoardRelationValue_Fragment | DisplayValue_ButtonValue_Fragment | DisplayValue_CheckboxValue_Fragment | DisplayValue_ColorPickerValue_Fragment | DisplayValue_CountryValue_Fragment | DisplayValue_CreationLogValue_Fragment | DisplayValue_DateValue_Fragment | DisplayValue_DependencyValue_Fragment | DisplayValue_DirectDocValue_Fragment | DisplayValue_DocValue_Fragment | DisplayValue_DropdownValue_Fragment | DisplayValue_EmailValue_Fragment | DisplayValue_FileValue_Fragment | DisplayValue_FormulaValue_Fragment | DisplayValue_GroupValue_Fragment | DisplayValue_HourValue_Fragment | DisplayValue_IntegrationValue_Fragment | DisplayValue_ItemIdValue_Fragment | DisplayValue_LastUpdatedValue_Fragment | DisplayValue_LinkValue_Fragment | DisplayValue_LocationValue_Fragment | DisplayValue_LongTextValue_Fragment | DisplayValue_MirrorValue_Fragment | DisplayValue_NumbersValue_Fragment | DisplayValue_PeopleValue_Fragment | DisplayValue_PersonValue_Fragment | DisplayValue_PhoneValue_Fragment | DisplayValue_ProgressValue_Fragment | DisplayValue_RatingValue_Fragment | DisplayValue_StatusValue_Fragment | DisplayValue_SubtasksValue_Fragment | DisplayValue_TagsValue_Fragment | DisplayValue_TeamValue_Fragment | DisplayValue_TextValue_Fragment | DisplayValue_TimeTrackingValue_Fragment | DisplayValue_TimelineValue_Fragment | DisplayValue_UnsupportedValue_Fragment | DisplayValue_VoteValue_Fragment | DisplayValue_WeekValue_Fragment | DisplayValue_WorldClockValue_Fragment;
 
-export type GetBoardsQueryVariables = Exact<{ [key: string]: never }>;
+export type GetBoardsQueryVariables = Exact<{ [key: string]: never; }>;
 
-export type GetBoardsQuery = {
-  __typename?: 'Query';
-  boards?: Array<{
-    __typename?: 'Board';
-    id: string;
-    name: string;
-    type?: BoardObjectType | null;
-  } | null> | null;
-};
+
+export type GetBoardsQuery = { __typename?: 'Query', boards?: Array<{ __typename?: 'Board', id: string, name: string, type?: BoardObjectType | null } | null> | null };
+
+export type GetAccountWorkspaceQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAccountWorkspaceQuery = { __typename?: 'Query', account?: { __typename?: 'Account', slug: string } | null };

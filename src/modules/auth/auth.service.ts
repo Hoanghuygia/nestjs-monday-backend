@@ -7,7 +7,6 @@ import { StandardResponse } from "@/src/common/filters/dtos/standard-response";
 import { ACCESS_TOKEN_PREFIX, TOKEN_MONDAY_URL } from "@/src/constant/constant";
 import { TokenCacheService } from "./token-cache.service";
 import * as jwt from 'jsonwebtoken';
-import { M } from "vitest/dist/chunks/rpc.d.RH3apGEf";
 
 @Injectable()
 export class AuthService{
