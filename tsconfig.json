@@ -1,6 +1,5 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  // Force reload
   "compilerOptions": {
     "baseUrl": ".",
     "module": "commonjs",
@@ -16,6 +15,10 @@
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
+    "typeRoots": [
+      "./node_modules/@types",
+      "./src/@type"
+    ],
     "paths": {
       "@/src/*": [
         "src/*"
@@ -32,10 +35,7 @@
       "@/tests/*": [
         "tests/*"
       ]
-    },
-    "types": [
-      "vitest/globals"
-    ]
+    }
   },
   "exclude": [
     "node_modules",
