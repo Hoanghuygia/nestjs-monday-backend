@@ -20,7 +20,7 @@ async function bootstrap() {
 
   // Load allowed origins
   const serverAddress = envManage.get('MNDY_SERVER_ADDRESS');
-  const clientAddress = envManage.get('FRONTEND_URL');
+  // const clientAddress = envManage.get('FRONTEND_URL');
 
   const allowedOrigins: string[] = [];
   if (!serverAddress || typeof serverAddress !== 'string') {
@@ -31,11 +31,11 @@ async function bootstrap() {
     allowedOrigins.push(serverAddress);
   }
 
-  if (!clientAddress || typeof clientAddress !== 'string') {
-    loggerMonday.error('FRONTEND_URL is not set in environment variables');
-  } else {
-    allowedOrigins.push(clientAddress);
-  }
+  // if (!clientAddress || typeof clientAddress !== 'string') {
+  //   loggerMonday.error('FRONTEND_URL is not set in environment variables');
+  // } else {
+  //   allowedOrigins.push(clientAddress);
+  // }
 
   loggerMonday.info(`CORS allowed origins: ${allowedOrigins.join(', ')}`);
 

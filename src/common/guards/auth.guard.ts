@@ -16,90 +16,66 @@ export class AuthGuard implements CanActivate {
     canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
         const req = context.switchToHttp().getRequest<Request>(); // nếu không để express thì nó là gì ? 
 
-        try {
-            let { authorization } = req.headers;
-            this.logger.debug(`Authorization header: ${authorization}`);
-            if (!authorization) {
-                this.logger.error(`No authorization header present`);
-                return false;
-            }
+        // Validation logic - no try-catch to preserve exception format
+        let { authorization } = req.headers;
+        this.logger.debug(`Authorization header: ${authorization}`);
 
-            if (typeof authorization !== 'string') {
-                this.logger.error(`Invalid authorization header type`);
-                const errorResponse = StandardResponse.error(
-                    null,
-                    'INVALID_AUTHORIZATION_HEADER',
-                    'Authorization header must be a string',
-                    '401'
-                );
-                throw new UnauthorizedException(errorResponse);
-            }
-
-            const signingSecret = this.manageService.getSecret(this.secretKeyName);
-            if(!signingSecret || typeof signingSecret !== 'string'){
-                this.logger.error(`Signing secret not found or invalid`);
-                const errorResponse = StandardResponse.error(
-                    null,
-                    'SIGNING_SECRET_NOT_FOUND',
-                    'Signing secret not found or invalid',
-                    '401'
-                );
-                throw new UnauthorizedException(errorResponse);
-            }
-
-            const tokenPart = authorization.split(' ');
-            if (tokenPart.length === 2 || tokenPart[0] === 'Bearer') {
-                authorization = tokenPart[1];
-            }else
-                {
-                this.logger.error(`Invalid authorization header format`);
-                const errorResponse = StandardResponse.error(
-                    null,
-                    'INVALID_AUTHORIZATION_FORMAT',
-                    'Authorization header must be in the format: Bearer <token>',
-                    '401'
-                );
-                throw new UnauthorizedException(errorResponse);
-            }
-            authorization = tokenPart[1];
-
-            const payload = jwt.verify(authorization, signingSecret);
-            if (!payload || typeof payload !== 'object' || !('userId' in payload) || !('accountId' in payload)) {
-                this.logger.error(`Invalid token payload`);
-                const errorResponse = StandardResponse.error(
-                    null,
-                    'INVALID_TOKEN_PAYLOAD',
-                    'Token payload is invalid',
-                    '401'
-                );
-                throw new UnauthorizedException(errorResponse);
-            }
-
-            req.session = payload as MondayTokenPayload;
+        if (!authorization && req.query && typeof req.query.token === 'string') {
+            this.logger.debug('Checking query for token');
+            authorization = req.query.token;
         }
-        catch (error) {
-            const errorDetail = error instanceof Error ? {
-                name: error.name,
-                message: error.message,
-                stack: error.stack,
-                response: (error as any)?.response?.data ?? null
-            } : {
-                name: 'UnknownError',
-                message: String(error),
-                stack: null,
-                response: null
-            }
-                ;
-            this.logger.error(`AuthGuard error: ${errorDetail.message}`);
+
+        if (!authorization) {
+            this.logger.error(`No authorization header present`);
+            const errorResponse = StandardResponse.error(
+                null,
+                'NO_AUTHORIZATION_HEADER',
+                'No authorization header present',
+                '401'
+            );
+            throw new UnauthorizedException(errorResponse);
         }
+
+        this.logger.debug(`Authorization header: ${authorization}`);
+
+        if (typeof authorization !== 'string') {
+            this.logger.error(`Invalid authorization header type`);
+            const errorResponse = StandardResponse.error(
+                null,
+                'INVALID_AUTHORIZATION_HEADER',
+                'Authorization header must be a string',
+                '401'
+            );
+            throw new UnauthorizedException(errorResponse);
+        }
+
+        const signingSecret = this.manageService.getSecret(this.secretKeyName);
+        if (!signingSecret || typeof signingSecret !== 'string') {
+            this.logger.error(`Signing secret not found or invalid`);
+            const errorResponse = StandardResponse.error(
+                null,
+                'SIGNING_SECRET_NOT_FOUND',
+                'Signing secret not found or invalid',
+                '401'
+            );
+            throw new UnauthorizedException(errorResponse);
+        }
+
+        const tokenPart = authorization.split(' ');
+        authorization = tokenPart[1];
+
+        const payload = jwt.verify(authorization, signingSecret);
+
+        req.session = payload as MondayTokenPayload;
         return true;
+
     }
 }
 
 // Support dynamic guards: MONDAY_SIGNING_SECRET, MONDAY_CLINET_SECRET, etc.
 export function AuthGuardFactory(secretKeyName: string): Type<CanActivate> {
     @Injectable()
-    class CustomAuthGuard extends AuthGuard{
+    class CustomAuthGuard extends AuthGuard {
         constructor(manageService: ManageService) {
             super(manageService, secretKeyName);
         }

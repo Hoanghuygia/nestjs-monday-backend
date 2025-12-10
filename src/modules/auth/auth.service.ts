@@ -1,4 +1,4 @@
-import { Logger } from "@mondaycom/apps-sdk/dist/types/utils/logger";
+import { Logger } from "@mondaycom/apps-sdk";
 import { Injectable, InternalServerErrorException, ServiceUnavailableException } from "@nestjs/common";
 import axios from "axios";
 import { MondayAccessToken } from "./dto/monday-access-token.dto";
@@ -9,16 +9,16 @@ import { TokenCacheService } from "./token-cache.service";
 import * as jwt from 'jsonwebtoken';
 
 @Injectable()
-export class AuthService{
+export class AuthService {
     private readonly logger: Logger = new Logger(AuthService.name);
 
-    constructor(private readonly manageService: ManageService, private readonly tokenCacheService: TokenCacheService){}
+    constructor(private readonly manageService: ManageService, private readonly tokenCacheService: TokenCacheService) { }
 
-    async exchangeCodeForToken(code: string, redirectUri: string): Promise<MondayAccessToken>{
+    async exchangeCodeForToken(code: string, redirectUri: string): Promise<MondayAccessToken> {
         const cliendtId = this.manageService.getEnv('MONDAY_CLIENT_ID');
         const clientSecret = this.manageService.getSecret('MONDAY_CLIENT_SECRET');
 
-        if(!cliendtId || !clientSecret){
+        if (!cliendtId || !clientSecret) {
             this.logger.error('Monday client ID or client secret is not configured');
             const errorResponse = StandardResponse.error(
                 null,
@@ -29,7 +29,7 @@ export class AuthService{
             throw new InternalServerErrorException(errorResponse);
         }
 
-        try{
+        try {
             const response = await axios.post(TOKEN_MONDAY_URL, {
                 grant_type: 'authorization_code',
                 client_id: cliendtId,
@@ -40,7 +40,7 @@ export class AuthService{
 
             return response.data as MondayAccessToken;
         }
-        catch(error){
+        catch (error) {
             const errorMessage = error instanceof Error ? error.message : String(error);
             this.logger.error(`Failed to exchange code for token with error: ${errorMessage}`);
             const errorResponse = StandardResponse.error(
@@ -53,17 +53,17 @@ export class AuthService{
         }
     }
 
-    async storeAccessToken(accountId: string, token: MondayAccessToken){
-        const secureStorage = this.manageService.getSecureStorage(); 
+    async storeAccessToken(accountId: string, token: MondayAccessToken) {
+        const secureStorage = this.manageService.getSecureStorage();
 
-        try{
+        try {
             await secureStorage.set<MondayAccessToken>(`${ACCESS_TOKEN_PREFIX}${accountId}`, token);
 
             this.tokenCacheService.set(accountId, token);
 
             this.logger.info(`Access token stored successfully for accountId: ${accountId}`);
         }
-        catch(error){
+        catch (error) {
             const errorMessage = error instanceof Error ? error.message : String(error);
             this.logger.error(`Failed to store access token for accountId: ${accountId} with error: ${errorMessage}`);
 
@@ -77,23 +77,23 @@ export class AuthService{
         }
     }
 
-    async getAccessToken(accountId: string): Promise<MondayAccessToken | null>{
+    async getAccessToken(accountId: string): Promise<MondayAccessToken | null> {
         const cacheToken = this.tokenCacheService.get(accountId);
-        if(cacheToken){
+        if (cacheToken) {
             this.logger.info(`Access token retrieved from cache for accountId: ${accountId}`);
             return cacheToken
         }
-        try{
+        try {
             const secureStore = this.manageService.getSecureStorage();
             const token = await secureStore.get<MondayAccessToken>(`${ACCESS_TOKEN_PREFIX}${accountId}`);
-            if(token){
+            if (token) {
                 this.tokenCacheService.set(accountId, token);
                 this.logger.info(`Access token retrieved from secure storage for accountId: ${accountId}`);
                 return token;
             }
             return null;
         }
-        catch(error){
+        catch (error) {
             const errorMessage = error instanceof Error ? error.message : String(error);
             this.logger.error(`Failed to retrieve access token for accountId: ${accountId} with error: ${errorMessage}`);
             const errorResponse = StandardResponse.error(
@@ -106,14 +106,14 @@ export class AuthService{
         }
     }
 
-    async removeAccessToken(accountId: string){
+    async removeAccessToken(accountId: string) {
         const secureStorage = this.manageService.getSecureStorage();
-        try{
+        try {
             await secureStorage.delete(`${ACCESS_TOKEN_PREFIX}${accountId}`);
             this.tokenCacheService.delete(accountId);
             this.logger.info(`Access token removed successfully for accountId: ${accountId}`);
         }
-        catch(error){
+        catch (error) {
             const errorMessage = error instanceof Error ? error.message : String(error);
             this.logger.error(`Failed to remove access token for accountId: ${accountId} with error: ${errorMessage}`);
             const errorResponse = StandardResponse.error(
@@ -126,11 +126,11 @@ export class AuthService{
         }
     }
 
-    createJwtToken(type: 'MONDAY_SIGNING_SECRET' | 'MONDAY_CLIENT_SECRET', payload?: Record<string, any>): string{
-        try{
+    createJwtToken(type: 'MONDAY_SIGNING_SECRET' | 'MONDAY_CLIENT_SECRET', payload?: Record<string, any>): string {
+        try {
             const secret = this.manageService.getSecret(type);
 
-            if(!secret || typeof secret !== 'string'){
+            if (!secret || typeof secret !== 'string') {
                 this.logger.error(`Signing secret not found or invalid for type: ${type}`);
                 const errorResponse = StandardResponse.error(
                     null,
@@ -144,13 +144,13 @@ export class AuthService{
             const defaultPayload = {
                 iat: Math.floor(Date.now() / 1000),
                 exp: Math.floor(Date.now() / 1000) + (5 * 60), // expire in 5 minutes
-                ... payload
+                ...payload
             }
 
             const token = jwt.sign(defaultPayload, secret);
             return token;
         }
-        catch(error){
+        catch (error) {
             const errorMessage = error instanceof Error ? error.message : String(error);
             this.logger.error(`Failed to create JWT token for type: ${type} with error: ${errorMessage}`);
             const errorResponse = StandardResponse.error(

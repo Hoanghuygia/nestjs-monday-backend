@@ -1,16 +1,18 @@
 import { Controller, Get, InternalServerErrorException, Query, Req, Res, UnauthorizedException, UseGuards } from "@nestjs/common";
 import { AuthService } from './auth.service';
-import { Logger } from "@mondaycom/apps-sdk/dist/types/utils/logger";
+import { Logger } from "@mondaycom/apps-sdk";
 import { AuthGuardFactory } from '../../common/guards/auth.guard';
 import { Request, Response } from "express";
 import { StandardResponse } from "@/src/common/filters/dtos/standard-response";
 import * as jwt from 'jsonwebtoken';
 import { CallbackQuery } from "./dto/monday-callback-query.dto";
+import { ManageService } from "../management/manage.service";
+import { AccountService } from "../account/account.service";
 
-@Controller('monday/auth')
+@Controller('/auth')
 export class AuthController {
     private readonly logger = new Logger(AuthController.name);
-    constructor(private readonly authService: AuthService, private readonly manageService: ManageService) { }
+    constructor(private readonly authService: AuthService, private readonly manageService: ManageService, private readonly accountService: AccountService) { }
 
     @Get('authorize')
     @UseGuards(AuthGuardFactory('MONDAY_SIGNING_SECRET'))
@@ -31,12 +33,12 @@ export class AuthController {
 
         const { accountId, userId, backToUrl, shortLivedToken } = req.session;
 
-        if (!accountId || !userId || !shortLivedToken) {
-            this.logger.error("Missing accountId or userId or shortLivedToken in session");
+        if (!accountId || !userId || !shortLivedToken || !backToUrl) {
+            this.logger.error("Missing accountId or userId or shortLivedToken or backToUrl in session");
             const errorResponse = StandardResponse.error(
                 null,
                 'INVALID_TOKEN_PAYLOAD',
-                'Missing accountId or userId or shortLivedToken in session',
+                'Missing accountId or userId or shortLivedToken or backToUrl in session',
                 '401'
             );
             throw new UnauthorizedException(errorResponse);
@@ -47,12 +49,13 @@ export class AuthController {
             return res.redirect(backToUrl);
         }
 
+        // Generate state JWT with payload: accountId, backToUrl
         const state = this.generateState(accountId.toString(), backToUrl);
 
         const params = new URLSearchParams({
             client_id: String(this.manageService.getEnv('MONDAY_CLIENT_ID')),
             state: state,
-            redirect_uri: `${this.manageService.getEnv('BASE_URL')}/monday/auth/callback`
+            redirect_uri: `${this.manageService.getEnv('MONDAY_SERVER_ADDRESS')}/monday/auth/callback`
         });
 
         const workSpace = await this.accountService.getAccountWorkspace(shortLivedToken);
@@ -105,8 +108,8 @@ export class AuthController {
             return res.redirect(backToUrl);
         }
         catch (error) {
-            this.logger.error(`Error exchanging code for token or storing access token: ${errorMessage}`);
             const errorMessage = error instanceof Error ? error.message : String(error);
+            this.logger.error(`Error exchanging code for token or storing access token: ${errorMessage}`);
             const errorResponse = StandardResponse.error(
                 null,
                 'TOKEN_EXCHANGE_FAILED',

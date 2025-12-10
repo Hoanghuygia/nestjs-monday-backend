@@ -44,7 +44,7 @@
     "dev:expose": "node -r dotenv/config -e \"require('child_process').spawn('mapps', ['tunnel:create', '-p', '8080', '-a', process.env.APP_ID, '--verbose'], {stdio: 'inherit', shell: true}).on('close', (code) => process.exit(code))\"",
     "dev:stop": "kill-port 8080",
     "dev:debug": "nest start --watch --debug=0.0.0.0:9229 --transpile-only",
-    "deploy:build": "npm run build && cp package.json dist/package.json && jq '.scripts = {start: \"NODE_ENV=production node main\"}' package.json > dist/package.json",
+    "deploy:build": "npm run build && node -e \"const fs=require('fs');const pkg=JSON.parse(fs.readFileSync('package.json'));pkg.scripts={start:'NODE_ENV=production node main'};fs.writeFileSync('dist/package.json',JSON.stringify(pkg,null,2))\"",
     "deploy:push": "mapps code:push -d \"dist\"",
     "deploy": "npm run deploy:build && npm run deploy:push",
     "fetch:schema": "bash fetch-schema.sh",

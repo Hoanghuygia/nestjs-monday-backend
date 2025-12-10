@@ -22,9 +22,11 @@ import { ManageModule } from '../modules/management/manage.module';
     ManageModule
   ],
   providers: [
+    // Filters are executed in REVERSE order of registration
+    // Register GlobalExceptionFilter first so it executes LAST (as fallback)
     {
       provide: APP_FILTER,
-      useClass: ValidationExceptionFilter,
+      useClass: GlobalExceptionFilter,
     },
     {
       provide: APP_FILTER,
@@ -32,8 +34,8 @@ import { ManageModule } from '../modules/management/manage.module';
     },
     {
       provide: APP_FILTER,
-      useClass: GlobalExceptionFilter,
+      useClass: ValidationExceptionFilter,
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }
