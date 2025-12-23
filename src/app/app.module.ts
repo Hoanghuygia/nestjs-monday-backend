@@ -4,22 +4,22 @@ import { APP_FILTER } from '@nestjs/core';
 
 import { HealthModule } from '@/app/health/health.module';
 import { UserModule } from '@/contexts/users/user.module';
-import { LoggerModule } from '@/shared/logger/logger.module';
 
 import { GlobalExceptionFilter } from '../common/filters/global-exception.filter';
 import { HttpExceptionFilter } from '../common/filters/http-exception.filter';
 import { ValidationExceptionFilter } from '../common/filters/validation-exception.filter';
-import { MondayModule } from '../modules/monday/monday.module';
+import { GlobalLoggerModule } from '../modules/global-logger.module';
 import { ManageModule } from '../modules/management/manage.module';
+import { MondayModule } from '../modules/monday/monday.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, cache: true }),
-    LoggerModule,
+    GlobalLoggerModule,
     HealthModule,
     UserModule,
     MondayModule,
-    ManageModule
+    ManageModule,
   ],
   providers: [
     // Filters are executed in REVERSE order of registration
@@ -38,4 +38,4 @@ import { ManageModule } from '../modules/management/manage.module';
     },
   ],
 })
-export class AppModule { }
+export class AppModule {}

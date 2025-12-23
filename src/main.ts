@@ -2,16 +2,17 @@ import {
   EnvironmentVariablesManager,
   Logger as MondayLogger,
 } from '@mondaycom/apps-sdk';
-import { Logger } from '@nestjs/common';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import cookieParser from 'cookie-parser';
 
 import { AppModule } from '@/app/app.module';
+import { Logger } from '@/src/utils/logger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  // Monday Logger for bootstrap logic (before NestJS app is fully ready/injectable)
   const loggerMonday = new MondayLogger('Bootstrap');
   const envManage = new EnvironmentVariablesManager({ updateProcessEnv: true });
   const configService = app.get(ConfigService);
@@ -66,19 +67,20 @@ async function bootstrap() {
     }),
   );
 
-  app.setGlobalPrefix(configService.get<string>('apiPrefix', 'api'));
+  app.setGlobalPrefix(configService.get<string>('API_PREFIX', '/api/v1'));
   const port = configService.get<string>('PORT', '8080');
 
   await app.listen(port, '0.0.0.0');
 
-  const logger = app.get(Logger);
-  logger.log(`App is ready and listening on port ${port} 🚀`);
+  // Use app.resolve to get a transient scoped provider
+  const logger = await app.resolve(Logger);
+  logger.info(`App is ready and listening on port ${port} 🚀`);
 }
 
 bootstrap().catch(handleError);
 
 function handleError(error: unknown) {
-  new Logger('Bootstrap').error(error);
+  new MondayLogger('Bootstrap').error(JSON.stringify(error));
   process.exit(1);
 }
 

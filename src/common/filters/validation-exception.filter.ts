@@ -14,8 +14,10 @@ import { StandardResponse } from './dtos/standard-response';
 
 @Catch(BadRequestException)
 export class ValidationExceptionFilter implements ExceptionFilter {
-  private readonly logger = new Logger(ValidationExceptionFilter.name);
-  constructor(private readonly configService: ConfigService) {}
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly logger: Logger,
+  ) {}
 
   catch(exception: BadRequestException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();

@@ -14,8 +14,10 @@ import { StandardResponse } from './dtos/standard-response';
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
-  private readonly logger = new Logger(HttpExceptionFilter.name);
-  constructor(private readonly configService: ConfigService) { }
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly logger: Logger,
+  ) {}
 
   catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
@@ -34,7 +36,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
       'data' in exceptionResponse &&
       'error' in exceptionResponse
     ) {
-      this.logger.debug('Exception already in StandardResponse format, returning as-is');
+      this.logger.debug(
+        'Exception already in StandardResponse format, returning as it is',
+      );
       return response.status(status).json(exceptionResponse);
     }
 

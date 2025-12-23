@@ -105,3 +105,28 @@ And for trying to fix lint issues automatically, you can run:
 ```bash
 node --run lint:fix
 ```
+
+
+
+
+## Monday CLI
+
+# List all environemt key
+```bash
+mapps code:env -m list-keys
+```
+
+# Set environment key
+```bash
+mapps code:env -m set -k KEY -v VALUE
+```
+
+# Deploy
+
+```bash
+npm run deploy:build
+npx mapps code:push -a <APP_ID> -i <LIVE_VERSION_ID> -f -d dist
+npx mapps code:push -a 10692458 -i 12057129 -f -d dist
+```
+
+

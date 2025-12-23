@@ -72,6 +72,15 @@ module.exports = tseslint.config(
       '@typescript-eslint/no-unsafe-argument': 'off',
       "@typescript-eslint/no-redundant-type-constituents": "off",
 
+      // Disable overly pedantic rules
+      '@typescript-eslint/no-base-to-string': 'off', // Too strict with JsonValue types
+      '@typescript-eslint/unbound-method': 'off', // Too strict with method references
+      '@typescript-eslint/use-unknown-in-catch-callback-variable': 'off', // Allow error: any in catch
+      '@typescript-eslint/no-non-null-assertion': 'warn', // Warn instead of error
+      '@typescript-eslint/no-floating-promises': 'warn', // Warn instead of error
+      '@typescript-eslint/require-await': 'warn', // Warn instead of error
+      'unicorn/no-process-exit': 'off', // Allow process.exit in Node.js apps
+
     },
   },
   {
