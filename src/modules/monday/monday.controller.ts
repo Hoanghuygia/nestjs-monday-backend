@@ -3,13 +3,14 @@ import type { Request, Response } from 'express';
 
 import { AuthGuardFactory } from '@/src/common/guards/auth.guard';
 import { Logger } from '@/src/utils/logger';
+import { SetDefaultColumnValueDTO } from '../account/dto/set-default-column-value.dto';
 
 @Controller('monday')
+@UseGuards(AuthGuardFactory('MDY_SIGNING_SECRET'))
 export class MondayController {
   constructor(private readonly logger: Logger) {}
 
   @Post('test')
-  @UseGuards(AuthGuardFactory('MDY_SIGNING_SECRET'))
   testEndpoint(
     @Req() req: Request,
     @Res() res: Response,
@@ -46,5 +47,10 @@ export class MondayController {
       this.logger.error(`Error in testEndpoint ${JSON.stringify(errorDetail)}`);
       return res.status(500).json({ message: 'Internal Server Error' });
     }
+  }
+
+  @Post('set-default column-value')
+  async setDefaultColumnvalue(@Req() req: Request, @Res() res: Response, @Body() body: SetDefaultColumnValueDTO){
+
   }
 }

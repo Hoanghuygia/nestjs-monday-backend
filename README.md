@@ -111,17 +111,17 @@ node --run lint:fix
 
 ## Monday CLI
 
-# List all environemt key
+### List all environemt key
 ```bash
 mapps code:env -m list-keys
 ```
 
-# Set environment key
+### Set environment key
 ```bash
 mapps code:env -m set -k KEY -v VALUE
 ```
 
-# Deploy
+### Deploy
 
 ```bash
 npm run deploy:build
