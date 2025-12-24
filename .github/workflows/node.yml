@@ -9,11 +9,15 @@ jobs:
     steps:
       - name: Checkout 🛬
         uses: actions/checkout@v4
+
       - name: Setup Node ⚙️
         uses: ./.github/actions/setup-node
+
       - name: Build typescript 📦
         run: node --run build && find dist/main.js
+
       - name: Lint code 💅
         run: node --run lint
+
       - name: Run tests ✅
         run: node --run test
