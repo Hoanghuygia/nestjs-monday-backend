@@ -1,11 +1,12 @@
 import { Module } from "@nestjs/common";
 import { MondayFieldController } from "./monday-field.controller";
-import { ManageService } from "../management/manage.service";
-import { AuthService } from "../auth/auth.service";
+import { AuthModule } from "../auth/auth.module";
+import { ManageModule } from "../management/manage.module";
+import { MondayFieldService } from "./monday-field.service";
 
 @Module({
-    providers: [ManageService, AuthService],
+    imports: [AuthModule, ManageModule],
     controllers: [MondayFieldController],
-    imports: []
+    providers: [MondayFieldService]
 })
-export class MondayFieldModule {}
+export class MondayFieldModule { }

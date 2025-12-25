@@ -6,8 +6,8 @@ import { AccountService } from "../account/account.service";
 import { ManageService } from "../management/manage.service";
 
 @Module({
-    controllers:[AuthController],
-    providers: [AuthService, TokenCacheService, AccountService, ManageService]
+    controllers: [AuthController],
+    providers: [AuthService, TokenCacheService, AccountService, ManageService],
+    exports: [AuthService]
 })
-
-export class AuthModule {}
+export class AuthModule { }
