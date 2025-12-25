@@ -9,6 +9,7 @@ import cookieParser from 'cookie-parser';
 
 import { AppModule } from '@/app/app.module';
 import { Logger } from '@/src/utils/logger';
+import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -18,6 +19,8 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
 
   app.use(cookieParser());
+
+  app.useGlobalInterceptors(new TransformInterceptor());
 
   // Load allowed origins
   const serverAddress = envManage.get('MNDY_SERVER_ADDRESS');
