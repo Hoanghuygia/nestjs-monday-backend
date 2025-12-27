@@ -8287,6 +8287,13 @@ export type GetBoardsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetBoardsQuery = { __typename?: 'Query', boards?: Array<{ __typename?: 'Board', id: string, name: string, type?: BoardObjectType | null } | null> | null };
 
+export type GetColumnsQueryVariables = Exact<{
+  boardId: Scalars['ID']['input'];
+}>;
+
+
+export type GetColumnsQuery = { __typename?: 'Query', boards?: Array<{ __typename?: 'Board', columns?: Array<{ __typename?: 'Column', id: string, title: string, type: ColumnType } | null> | null } | null> | null };
+
 export type GetAccountWorkspaceQueryVariables = Exact<{ [key: string]: never; }>;
 
 

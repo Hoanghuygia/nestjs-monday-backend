@@ -9,3 +9,15 @@ export const getBoardsQuery = gql`
     }
   }
 `;
+
+export const getColumnsQuery = gql`
+    query getColumns($boardId: ID!) {
+        boards(ids: [$boardId]) {
+            columns {
+                id
+                title
+                type
+            }
+        }
+    }
+`;
