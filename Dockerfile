@@ -17,7 +17,7 @@ COPY package.json package-lock.json ./
 # Install dependencies without running postinstall scripts to avoid patch-package errors
 # Then manually install platform-specific ngrok binary for linux-x64
 RUN npm install --ignore-scripts && \
-    npm install --no-save @ngrok/ngrok-linux-x64-gnu
+    npm install @ngrok/ngrok-linux-x64-gnu
 
 # RUN npm install
 

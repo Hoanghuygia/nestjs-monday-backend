@@ -8282,10 +8282,98 @@ type DisplayValue_WorldClockValue_Fragment = { __typename: 'WorldClockValue', ty
 
 export type DisplayValueFragment = DisplayValue_BatteryValue_Fragment | DisplayValue_BoardRelationValue_Fragment | DisplayValue_ButtonValue_Fragment | DisplayValue_CheckboxValue_Fragment | DisplayValue_ColorPickerValue_Fragment | DisplayValue_CountryValue_Fragment | DisplayValue_CreationLogValue_Fragment | DisplayValue_DateValue_Fragment | DisplayValue_DependencyValue_Fragment | DisplayValue_DirectDocValue_Fragment | DisplayValue_DocValue_Fragment | DisplayValue_DropdownValue_Fragment | DisplayValue_EmailValue_Fragment | DisplayValue_FileValue_Fragment | DisplayValue_FormulaValue_Fragment | DisplayValue_GroupValue_Fragment | DisplayValue_HourValue_Fragment | DisplayValue_IntegrationValue_Fragment | DisplayValue_ItemIdValue_Fragment | DisplayValue_LastUpdatedValue_Fragment | DisplayValue_LinkValue_Fragment | DisplayValue_LocationValue_Fragment | DisplayValue_LongTextValue_Fragment | DisplayValue_MirrorValue_Fragment | DisplayValue_NumbersValue_Fragment | DisplayValue_PeopleValue_Fragment | DisplayValue_PersonValue_Fragment | DisplayValue_PhoneValue_Fragment | DisplayValue_ProgressValue_Fragment | DisplayValue_RatingValue_Fragment | DisplayValue_StatusValue_Fragment | DisplayValue_SubtasksValue_Fragment | DisplayValue_TagsValue_Fragment | DisplayValue_TeamValue_Fragment | DisplayValue_TextValue_Fragment | DisplayValue_TimeTrackingValue_Fragment | DisplayValue_TimelineValue_Fragment | DisplayValue_UnsupportedValue_Fragment | DisplayValue_VoteValue_Fragment | DisplayValue_WeekValue_Fragment | DisplayValue_WorldClockValue_Fragment;
 
+export type UpdateItemNameColumnMutationVariables = Exact<{
+  boardId: Scalars['ID']['input'];
+  itemId: Scalars['ID']['input'];
+  updateValue: Scalars['JSON']['input'];
+}>;
+
+
+export type UpdateItemNameColumnMutation = { __typename?: 'Mutation', change_multiple_column_values?: { __typename?: 'Item', id: string, name: string } | null };
+
+export type CreateItemMutationMutationVariables = Exact<{
+  boardId: Scalars['ID']['input'];
+  itemName: Scalars['String']['input'];
+  columnValues: Scalars['JSON']['input'];
+  groupId: Scalars['String']['input'];
+}>;
+
+
+export type CreateItemMutationMutation = { __typename?: 'Mutation', create_item?: { __typename?: 'Item', id: string } | null };
+
+export type CreateNewItemWithColumnValueMutationVariables = Exact<{
+  boardId: Scalars['ID']['input'];
+  groupId: Scalars['String']['input'];
+  itemName: Scalars['String']['input'];
+  columnValues: Scalars['JSON']['input'];
+}>;
+
+
+export type CreateNewItemWithColumnValueMutation = { __typename?: 'Mutation', create_item?: { __typename?: 'Item', id: string } | null };
+
+export type DuplicateItemMutationMutationVariables = Exact<{
+  boardId: Scalars['ID']['input'];
+  itemId: Scalars['ID']['input'];
+}>;
+
+
+export type DuplicateItemMutationMutation = { __typename?: 'Mutation', duplicate_item?: { __typename?: 'Item', id: string } | null };
+
+export type MoveItemMutationMutationVariables = Exact<{
+  targetBoardId: Scalars['ID']['input'];
+  targetGroupId: Scalars['ID']['input'];
+  itemId: Scalars['ID']['input'];
+}>;
+
+
+export type MoveItemMutationMutation = { __typename?: 'Mutation', move_item_to_board?: { __typename?: 'Item', id: string } | null };
+
+export type ChangeMultipleColumnValueMutationVariables = Exact<{
+  itemId: Scalars['ID']['input'];
+  boardId: Scalars['ID']['input'];
+  columnValues: Scalars['JSON']['input'];
+}>;
+
+
+export type ChangeMultipleColumnValueMutation = { __typename?: 'Mutation', change_multiple_column_values?: { __typename?: 'Item', id: string } | null };
+
 export type GetBoardsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetBoardsQuery = { __typename?: 'Query', boards?: Array<{ __typename?: 'Board', id: string, name: string, type?: BoardObjectType | null } | null> | null };
+
+export type GetColumnsQueryVariables = Exact<{
+  boardId: Scalars['ID']['input'];
+}>;
+
+
+export type GetColumnsQuery = { __typename?: 'Query', boards?: Array<{ __typename?: 'Board', columns?: Array<{ __typename?: 'Column', id: string, title: string, type: ColumnType } | null> | null } | null> | null };
+
+export type GetItemWithColumnValueQueryVariables = Exact<{
+  boardId: Scalars['ID']['input'];
+  columnId: Scalars['ID']['input'];
+  compareValue: Scalars['CompareValue']['input'];
+  cursor?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type GetItemWithColumnValueQuery = { __typename?: 'Query', boards?: Array<{ __typename?: 'Board', id: string, items_page: { __typename?: 'ItemsResponse', cursor?: string | null, items: Array<{ __typename?: 'Item', id: string }> } } | null> | null };
+
+export type GetAllGroupsQueryQueryVariables = Exact<{
+  boardId: Scalars['ID']['input'];
+}>;
+
+
+export type GetAllGroupsQueryQuery = { __typename?: 'Query', boards?: Array<{ __typename?: 'Board', id: string, name: string, groups?: Array<{ __typename?: 'Group', id: string, title: string } | null> | null } | null> | null };
+
+export type GetAllItemsQueryWithColumnsQueryVariables = Exact<{
+  boardId: Scalars['ID']['input'];
+  cursor?: InputMaybe<Scalars['String']['input']>;
+  columnIds?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+}>;
+
+
+export type GetAllItemsQueryWithColumnsQuery = { __typename?: 'Query', boards?: Array<{ __typename?: 'Board', items_count?: number | null, items_page: { __typename?: 'ItemsResponse', cursor?: string | null, items: Array<{ __typename?: 'Item', id: string, name: string, column_values: Array<{ __typename: 'BatteryValue', id: string, text?: string | null, type: ColumnType } | { __typename: 'BoardRelationValue', id: string, text?: string | null, display_value: string, linked_item_ids: Array<string>, type: ColumnType } | { __typename: 'ButtonValue', id: string, text?: string | null, type: ColumnType } | { __typename: 'CheckboxValue', id: string, text?: string | null, type: ColumnType } | { __typename: 'ColorPickerValue', id: string, text?: string | null, type: ColumnType } | { __typename: 'CountryValue', id: string, text?: string | null, type: ColumnType } | { __typename: 'CreationLogValue', id: string, text?: string | null, type: ColumnType } | { __typename: 'DateValue', id: string, text?: string | null, date?: string | null, type: ColumnType } | { __typename: 'DependencyValue', id: string, text?: string | null, type: ColumnType } | { __typename: 'DirectDocValue', id: string, text?: string | null, type: ColumnType } | { __typename: 'DocValue', id: string, text?: string | null, type: ColumnType } | { __typename: 'DropdownValue', id: string, text?: string | null, type: ColumnType, values: Array<{ __typename?: 'DropdownValueOption', id: string, label: string }> } | { __typename: 'EmailValue', id: string, text?: string | null, type: ColumnType } | { __typename: 'FileValue', id: string, text?: string | null, type: ColumnType } | { __typename: 'FormulaValue', id: string, text?: string | null, display_value: string, type: ColumnType } | { __typename: 'GroupValue', id: string, text?: string | null, type: ColumnType } | { __typename: 'HourValue', id: string, text?: string | null, type: ColumnType } | { __typename: 'IntegrationValue', id: string, text?: string | null, type: ColumnType } | { __typename: 'ItemIdValue', id: string, text?: string | null, type: ColumnType } | { __typename: 'LastUpdatedValue', id: string, text?: string | null, type: ColumnType } | { __typename: 'LinkValue', id: string, text?: string | null, type: ColumnType } | { __typename: 'LocationValue', id: string, text?: string | null, address?: string | null, city?: string | null, country_short?: string | null, street_number?: string | null, street?: string | null, type: ColumnType } | { __typename: 'LongTextValue', id: string, text?: string | null, type: ColumnType } | { __typename: 'MirrorValue', id: string, text?: string | null, display_value: string, type: ColumnType } | { __typename: 'NumbersValue', id: string, text?: string | null, type: ColumnType } | { __typename: 'PeopleValue', id: string, text?: string | null, type: ColumnType } | { __typename: 'PersonValue', id: string, text?: string | null, type: ColumnType } | { __typename: 'PhoneValue', id: string, text?: string | null, type: ColumnType } | { __typename: 'ProgressValue', id: string, text?: string | null, type: ColumnType } | { __typename: 'RatingValue', id: string, text?: string | null, type: ColumnType } | { __typename: 'StatusValue', id: string, text?: string | null, index?: number | null, type: ColumnType } | { __typename: 'SubtasksValue', id: string, text?: string | null, type: ColumnType } | { __typename: 'TagsValue', id: string, text?: string | null, type: ColumnType } | { __typename: 'TeamValue', id: string, text?: string | null, type: ColumnType } | { __typename: 'TextValue', id: string, text?: string | null, type: ColumnType } | { __typename: 'TimeTrackingValue', id: string, text?: string | null, type: ColumnType } | { __typename: 'TimelineValue', id: string, text?: string | null, type: ColumnType } | { __typename: 'UnsupportedValue', id: string, text?: string | null, type: ColumnType } | { __typename: 'VoteValue', id: string, text?: string | null, type: ColumnType } | { __typename: 'WeekValue', id: string, text?: string | null, type: ColumnType } | { __typename: 'WorldClockValue', id: string, text?: string | null, type: ColumnType }> }> } } | null> | null };
 
 export type GetAccountWorkspaceQueryVariables = Exact<{ [key: string]: never; }>;
 

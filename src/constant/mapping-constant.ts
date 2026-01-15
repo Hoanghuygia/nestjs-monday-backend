@@ -1,0 +1,1 @@
+export const GROUP_MAPPING_PREFIX = "daily-board-date-of-the-week-";
