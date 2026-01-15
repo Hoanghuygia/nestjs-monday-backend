@@ -5,10 +5,10 @@ import { Logger } from "@/src/utils/logger";
 import { Request } from 'express';
 import { CopyRelationColumnToNameDTO } from "../dtos/copy-relation-column-to-name.dto";
 import { StandardResponse } from "@/src/common/filters/dtos/standard-response";
-import { MondayServerSdk } from "monday-sdk-js";
 import { fetchAllBoardItemsWithColums } from "@/src/graphql/api/query/query.fucntion";
 import { BatchRunUtils } from "@/src/utils/run.api";
 import { updateNameColumn } from "@/src/graphql/api/mutation/mutation.function";
+import { ApiClient } from "@mondaydotcomorg/api";
 
 interface TargetItem {
     id: string;
@@ -63,7 +63,7 @@ export class CopyRelationColumnToNameService {
             throw new UnauthorizedException(errorResponse);
         }
 
-        const mondayClient = this.manageService.getServer(accessToken.access_token);
+        const mondayClient = this.manageService.getMondayClient(accessToken.access_token);
 
         // 1. Get all items in board
         const foundItems = await this.fetchAllItemsInBoard(mondayClient, this.logger, normalizeBoardId, sourceColumnId);
@@ -119,7 +119,7 @@ export class CopyRelationColumnToNameService {
         );
     }
 
-    private async fetchAllItemsInBoard(mondayClient: MondayServerSdk, logger: Logger, subBoardId: string, subColumnId: string) {
+    private async fetchAllItemsInBoard(mondayClient: ApiClient, logger: Logger, subBoardId: string, subColumnId: string) {
         const foundItems: TargetItem[] = [];
 
         this.logger.info(`Fetching all items in board ${subBoardId} with column ${subColumnId}`);

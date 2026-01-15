@@ -4,6 +4,7 @@ import {
     SecureStorage, 
     Storage 
 } from '@mondaycom/apps-sdk';
+import { ApiClient } from '@mondaydotcomorg/api';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { MondayServerSdk } from 'monday-sdk-js';
@@ -25,6 +26,10 @@ export class ManageService {
 
     getServer(token: string, apiVersion: string = this.configService.get<string>('API_VERSION', "2025-10")): MondayServerSdk {
         return initMonday({ token, apiVersion });
+    }
+
+    getMondayClient(token: string, apiVersion: string = this.configService.get<string>('API_VERSION', "2025-10")): ApiClient {
+        return new ApiClient({ token, apiVersion });
     }
 
     getSecureStorage(): InstanceType<typeof SecureStorage> {

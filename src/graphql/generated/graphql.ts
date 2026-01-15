@@ -8291,6 +8291,52 @@ export type UpdateItemNameColumnMutationVariables = Exact<{
 
 export type UpdateItemNameColumnMutation = { __typename?: 'Mutation', change_multiple_column_values?: { __typename?: 'Item', id: string, name: string } | null };
 
+export type CreateItemMutationMutationVariables = Exact<{
+  boardId: Scalars['ID']['input'];
+  itemName: Scalars['String']['input'];
+  columnValues: Scalars['JSON']['input'];
+  groupId: Scalars['String']['input'];
+}>;
+
+
+export type CreateItemMutationMutation = { __typename?: 'Mutation', create_item?: { __typename?: 'Item', id: string } | null };
+
+export type CreateNewItemWithColumnValueMutationVariables = Exact<{
+  boardId: Scalars['ID']['input'];
+  groupId: Scalars['String']['input'];
+  itemName: Scalars['String']['input'];
+  columnValues: Scalars['JSON']['input'];
+}>;
+
+
+export type CreateNewItemWithColumnValueMutation = { __typename?: 'Mutation', create_item?: { __typename?: 'Item', id: string } | null };
+
+export type DuplicateItemMutationMutationVariables = Exact<{
+  boardId: Scalars['ID']['input'];
+  itemId: Scalars['ID']['input'];
+}>;
+
+
+export type DuplicateItemMutationMutation = { __typename?: 'Mutation', duplicate_item?: { __typename?: 'Item', id: string } | null };
+
+export type MoveItemMutationMutationVariables = Exact<{
+  targetBoardId: Scalars['ID']['input'];
+  targetGroupId: Scalars['ID']['input'];
+  itemId: Scalars['ID']['input'];
+}>;
+
+
+export type MoveItemMutationMutation = { __typename?: 'Mutation', move_item_to_board?: { __typename?: 'Item', id: string } | null };
+
+export type ChangeMultipleColumnValueMutationVariables = Exact<{
+  itemId: Scalars['ID']['input'];
+  boardId: Scalars['ID']['input'];
+  columnValues: Scalars['JSON']['input'];
+}>;
+
+
+export type ChangeMultipleColumnValueMutation = { __typename?: 'Mutation', change_multiple_column_values?: { __typename?: 'Item', id: string } | null };
+
 export type GetBoardsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -8302,6 +8348,23 @@ export type GetColumnsQueryVariables = Exact<{
 
 
 export type GetColumnsQuery = { __typename?: 'Query', boards?: Array<{ __typename?: 'Board', columns?: Array<{ __typename?: 'Column', id: string, title: string, type: ColumnType } | null> | null } | null> | null };
+
+export type GetItemWithColumnValueQueryVariables = Exact<{
+  boardId: Scalars['ID']['input'];
+  columnId: Scalars['ID']['input'];
+  compareValue: Scalars['CompareValue']['input'];
+  cursor?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type GetItemWithColumnValueQuery = { __typename?: 'Query', boards?: Array<{ __typename?: 'Board', id: string, items_page: { __typename?: 'ItemsResponse', cursor?: string | null, items: Array<{ __typename?: 'Item', id: string }> } } | null> | null };
+
+export type GetAllGroupsQueryQueryVariables = Exact<{
+  boardId: Scalars['ID']['input'];
+}>;
+
+
+export type GetAllGroupsQueryQuery = { __typename?: 'Query', boards?: Array<{ __typename?: 'Board', id: string, name: string, groups?: Array<{ __typename?: 'Group', id: string, title: string } | null> | null } | null> | null };
 
 export type GetAllItemsQueryWithColumnsQueryVariables = Exact<{
   boardId: Scalars['ID']['input'];
