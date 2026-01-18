@@ -9,32 +9,37 @@ import { fetchAllBoardItemsAndSubitems } from "@/src/graphql/api/query/query.fuc
 import { updateItemColumns } from "@/src/graphql/api/mutation/mutation.function";
 
 interface TargetItem {
-    id: string;
-    minute: string;
-    time: string;
+	id: string;
+	minute: string;
+	time: string;
 }
 
 interface ParentItemWithSubitems {
-    id: string;
-    subitems: TargetItem[];
+	id: string;
+	subitems: TargetItem[];
+}
+
+enum TimePeriod {
+	MORNING = 'morning',
+	EVENING = 'evening'
 }
 
 @Injectable()
 export class UpdateTotalTimeService {
-    constructor(
-        private readonly logger: Logger,
-        private readonly authService: AuthService,
-        private readonly manageService: ManageService
-    ) { }
+	constructor(
+		private readonly logger: Logger,
+		private readonly authService: AuthService,
+		private readonly manageService: ManageService
+	) { }
 
-    async execute(req: Request, body: UpdateTotalTimeDTO){
-        this.logger.info(`Executing update total time service`);
-        if (!req.session.shortLivedToken || !req.session.accountId) {
+	async execute(req: Request, body: UpdateTotalTimeDTO) {
+		this.logger.info(`Executing update total time service`);
+		if (!req.session.shortLivedToken || !req.session.accountId) {
 			this.logger.error(`No shortlive token or accountId found`);
 			return;
 		}
 
-		const { currentBoardId, morningColumnId, eveningColumnId ,timeColumnId, minuteColumnId } =
+		const { currentBoardId, morningColumnId, eveningColumnId, timeColumnId, minuteColumnId } =
 			body.payload.inputFields;
 		this.logger.info(
 			`Input field: ${JSON.stringify(body.payload.inputFields)}`,
@@ -89,8 +94,8 @@ export class UpdateTotalTimeService {
 			})
 		);
 
-		this.logger.info(`Successfully completed update total time service`); 
-    }
+		this.logger.info(`Successfully completed update total time service`);
+	}
 
 	private async fetchAllParentItemsWithSubitems(
 		mondayClient: ApiClient,
@@ -117,30 +122,26 @@ export class UpdateTotalTimeService {
 
 			for (const item of page.items) {
 				const subitems: TargetItem[] = [];
-
-				// Extract subitems and their column values
 				const subitemsList = (item as any).subitems ?? [];
 
 				for (const subitem of subitemsList) {
-					const columnValueList = subitem.column_values ?? [];
+					const columnValues = subitem.column_values ?? [];
 
-					const minute = columnValueList.find(
-						(col: any) => col.id === subMinuteColumnId
-					);
-					const minuteValue = minute?.display_value || minute?.text || minute?.value || null;
-
-					const time = columnValueList.find(
-						(col: any) => col.id === subTimeColumnId
-					);
-					const timeValue = time?.display_value || time?.text || time?.value || null;
-
-					if (minuteValue) {
-						subitems.push({
-							id: subitem.id,
-							minute: minuteValue,
-							time: timeValue
-						});
+					const columnMap: Record<string, any> = {};
+					for (const col of columnValues) {
+						columnMap[col.id] = col;
 					}
+
+					const minuteCol = columnMap[subMinuteColumnId];
+					if (!minuteCol) continue;
+
+					const timeCol = columnMap[subTimeColumnId];
+
+					subitems.push({
+						id: subitem.id,
+						minute: minuteCol.display_value ?? minuteCol.text ?? minuteCol.value,
+						time: timeCol?.display_value ?? timeCol?.text ?? timeCol?.value ?? null
+					});
 				}
 
 				parentItems.push({
@@ -148,6 +149,7 @@ export class UpdateTotalTimeService {
 					subitems
 				});
 			}
+
 
 			cursor = page.cursor;
 		} while (cursor);
@@ -189,9 +191,9 @@ export class UpdateTotalTimeService {
 				`Subitem ${subitem.id}: time=${timeValue}, minute=${minuteValue}`
 			);
 
-			if (timeValue === 'morning' || timeValue === 'sáng') {
+			if (timeValue === TimePeriod.MORNING) {
 				totalMinuteMorning += minuteValue;
-			} else if (timeValue === 'evening' || timeValue === 'chiều') {
+			} else if (timeValue === TimePeriod.EVENING) {
 				totalMinuteEvening += minuteValue;
 			}
 		}
@@ -235,8 +237,8 @@ export class UpdateTotalTimeService {
 			`Updating parent item ${itemId} in board ${boardId} with morning=${totalMinuteMorning}, evening=${totalMinuteEvening}`
 		);
 
-        this.logger.info(`morningColumnId: ${morningColumnId}, eveningColumnId: ${eveningColumnId}`);
-        this.logger.info(`totalMinuteMorning: ${totalMinuteMorning}, totalMinuteEvening: ${totalMinuteEvening}`);
+		this.logger.info(`morningColumnId: ${morningColumnId}, eveningColumnId: ${eveningColumnId}`);
+		this.logger.info(`totalMinuteMorning: ${totalMinuteMorning}, totalMinuteEvening: ${totalMinuteEvening}`);
 
 		const columnValues: any = {};
 		columnValues[morningColumnId] = totalMinuteMorning;
