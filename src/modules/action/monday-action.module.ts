@@ -4,10 +4,11 @@ import { CopyRelationColumnToNameService } from "./services/copy-relation-column
 import { ManageModule } from "../management/manage.module";
 import { AuthModule } from "../auth/auth.module";
 import { CreateSubitemFromOtherBoardService } from "./services/create-subitem-from-other-board.service";
+import { UpdateTotalTimeService } from './services/update-total-time.service';
 
 @Module({
     imports: [ManageModule, AuthModule],
-    providers: [CopyRelationColumnToNameService, CreateSubitemFromOtherBoardService],
+    providers: [CopyRelationColumnToNameService, CreateSubitemFromOtherBoardService, UpdateTotalTimeService],
     controllers: [MondayActionController]
 })
 export class MondayActionModule { }

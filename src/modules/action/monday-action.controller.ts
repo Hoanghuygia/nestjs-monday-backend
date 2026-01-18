@@ -6,6 +6,7 @@ import { CopyRelationColumnToNameDTO } from "./dtos/copy-relation-column-to-name
 import { CopyRelationColumnToNameService } from "./services/copy-relation-column-name.service";
 import { CreateSubitemFromOtherBoardDTO } from "./dtos/create-subitem-from-other-board.dto";
 import { CreateSubitemFromOtherBoardService } from "./services/create-subitem-from-other-board.service";
+import { UpdateTotalTimeService } from "@/src/modules/action/services/update-total-time.service";
 
 @Controller('action')
 @UseGuards(AuthGuardFactory('MDY_SIGNING_SECRET'))
@@ -13,7 +14,8 @@ export class MondayActionController {
     constructor(
         private readonly logger: Logger,
         private readonly copyRelationColumnToNameService: CopyRelationColumnToNameService,
-        private readonly createSubitemFromOtherBoardService: CreateSubitemFromOtherBoardService
+        private readonly createSubitemFromOtherBoardService: CreateSubitemFromOtherBoardService,
+        private readonly updateTotalTimeService: UpdateTotalTimeService,
     ) { }
 
     @Post('copy-relation-column-to-name')
@@ -34,6 +36,6 @@ export class MondayActionController {
     @HttpCode(200)
     async updateTotalTime(@Req() req: Request, @Body() body: any) {
         this.logger.info(`Call endpoint update total time`);
-        return { success: true };
+        return await this.updateTotalTimeService.execute(req, body);
     }
 }

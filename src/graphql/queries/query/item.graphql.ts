@@ -21,3 +21,27 @@ export const getAllItemsQueryWithColumns = gql`
         }
     }    
 `
+
+export const getAllItemsAndSubItem = gql`
+    query GetAllItemsAndSubItem($boardId: ID!, $cursor: String, $columnIds: [String!]) {
+            boards(ids: [$boardId]) {
+    items_count
+    items_page(cursor: $cursor) {
+      cursor
+      items {
+        id
+        subitems {
+          id
+          column_values(ids: $columnIds) {
+            id
+            value
+            ... on MirrorValue {
+              display_value
+            }
+          }
+        }
+      }
+    }
+  }
+        }  
+`

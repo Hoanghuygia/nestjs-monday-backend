@@ -1,17 +1,19 @@
 import { Logger } from '@/src/utils/logger';
 import { retryMondayApi } from '@/src/utils/retry-run.api';
-import { getAllItemsQueryWithColumns } from '../../queries/query/item.graphql';
+import { getAllItemsAndSubItem, getAllItemsQueryWithColumns } from '../../queries/query/item.graphql';
 import {
   GetAllGroupsQueryQuery,
   GetAllGroupsQueryQueryVariables,
+  GetAllItemsAndSubItemQuery,
+  GetAllItemsAndSubItemQueryVariables,
   GetAllItemsQueryWithColumnsQuery,
   GetAllItemsQueryWithColumnsQueryVariables,
   GetItemWithColumnValueQuery,
   GetItemWithColumnValueQueryVariables,
 } from '../../generated/graphql';
 import { ApiClient } from '@mondaydotcomorg/api';
-import { getAllGroupsQuery } from '../../queries/query/groups.graphql';
 import { getItemWithColumnValue } from '../../queries/query/board.graphql';
+import { getAllGroupsQuery } from '../../queries/query/groups.graphql';
 
 interface ItemPageResult {
   items: any[];
@@ -25,8 +27,8 @@ export async function fetchAllBoardItemsWithColums(
 ): Promise<ItemPageResult> {
   const response = await retryMondayApi(
     () =>
-      mondayClient.request<{
-        data: GetAllItemsQueryWithColumnsQuery;
+      mondayClient.request<
+        GetAllItemsQueryWithColumnsQuery & {
         errors?: any;
       }>(getAllItemsQueryWithColumns, variables),
     3,
@@ -40,7 +42,7 @@ export async function fetchAllBoardItemsWithColums(
       cursor: null,
     };
   }
-  const page = response?.data?.boards?.[0]?.items_page;
+  const page = response?.boards?.[0]?.items_page;
 
   return {
     items: page?.items ?? [],
@@ -102,6 +104,35 @@ export async function fetchItemWithColumnvalue(
   // Check if the response structure has 'data' property or if it is the data itself
   const data = (response as any)?.data ?? response;
   const page = data?.boards?.[0]?.items_page;
+
+  return {
+    items: page?.items ?? [],
+    cursor: page?.cursor ?? null,
+  };
+}
+
+export async function fetchAllBoardItemsAndSubitems(
+  mondayClient: ApiClient,
+  logger: Logger,
+  variables: GetAllItemsAndSubItemQueryVariables,
+): Promise<ItemPageResult> {
+  const response = await retryMondayApi(
+    () =>
+      mondayClient.request<GetAllItemsAndSubItemQuery & {
+        errors?: any;
+      }>(getAllItemsAndSubItem, variables),
+    3,
+    logger,
+  );
+
+  if (response?.errors) {
+    logger.error(response.errors);
+    return {
+      items: [],
+      cursor: null,
+    };
+  }
+  const page = response?.boards?.[0]?.items_page;
 
   return {
     items: page?.items ?? [],
