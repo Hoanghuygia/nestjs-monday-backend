@@ -7,7 +7,7 @@ import { CopyRelationColumnToNameDTO } from "../dtos/copy-relation-column-to-nam
 import { StandardResponse } from "@/src/common/filters/dtos/standard-response";
 import { fetchAllBoardItemsWithColums } from "@/src/graphql/api/query/query.fucntion";
 import { BatchRunUtils } from "@/src/utils/run.api";
-import { updateNameColumn } from "@/src/graphql/api/mutation/mutation.function";
+import { updateItemColumns } from "@/src/graphql/api/mutation/mutation.function";
 import { ApiClient } from "@mondaydotcomorg/api";
 
 interface TargetItem {
@@ -82,10 +82,10 @@ export class CopyRelationColumnToNameService {
         const batchSummary = await BatchRunUtils.runBatch(
             foundItems,
             async (item) => {
-                const result = await updateNameColumn(mondayClient, this.logger, {
+                const result = await updateItemColumns(mondayClient, this.logger, {
                     boardId: normalizeBoardId,
                     itemId: item.id,
-                    updateValue: JSON.stringify({
+                    columnValues: JSON.stringify({
                         name: item.name
                     })
                 });
