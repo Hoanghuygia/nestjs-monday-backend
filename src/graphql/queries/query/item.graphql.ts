@@ -24,6 +24,7 @@ export const getAllItemsQueryWithColumns = gql`
 `;
 
 export const getAllItemsAndSubItem = gql`
+  ${DisplayValueFragment}
   query GetAllItemsAndSubItem($boardId: ID!, $cursor: String, $columnIds: [String!]) {
     boards(ids: [$boardId]) {
       items_count
