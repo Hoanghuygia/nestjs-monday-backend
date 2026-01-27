@@ -11,6 +11,7 @@ import { ValidationExceptionFilter } from '../common/filters/validation-exceptio
 import { GlobalLoggerModule } from '../modules/global-logger.module';
 import { ManageModule } from '../modules/management/manage.module';
 import { MondayModule } from '../modules/monday/monday.module';
+import { GoogleCalendarModule } from '../modules/google-calendar/google-calendar.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { MondayModule } from '../modules/monday/monday.module';
     UserModule,
     MondayModule,
     ManageModule,
+    GoogleCalendarModule,
   ],
   providers: [
     // Filters are executed in REVERSE order of registration
