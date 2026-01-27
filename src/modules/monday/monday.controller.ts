@@ -3,12 +3,16 @@ import type { Request, Response } from 'express';
 
 import { AuthGuardFactory } from '@/src/common/guards/auth.guard';
 import { Logger } from '@/src/utils/logger';
-import { SetDefaultColumnValueDTO } from '../account/dto/set-default-column-value.dto';
+import { SetStorageDto } from './dto/set-storage.dto';
+import { ManageService } from '../management/manage.service';
 
 @Controller('monday')
 @UseGuards(AuthGuardFactory('MDY_SIGNING_SECRET'))
 export class MondayController {
-	constructor(private readonly logger: Logger) { }
+	constructor(
+		private readonly logger: Logger,
+		private readonly manageService: ManageService,
+	) { }
 
 	@Post('test')
 	testEndpoint(
@@ -49,9 +53,54 @@ export class MondayController {
 		}
 	}
 
-	@Post('set-default-column-value')
-	async setDefaultColumnvalue(@Req() req: Request, @Res() res: Response, @Body() body: SetDefaultColumnValueDTO) {
-		this.logger.info(`Call endpoint set default column value`);
+	@Post('set-storage')
+	async setStorage(
+		@Req() req: Request,
+		@Res() res: Response,
+		@Body() body: SetStorageDto,
+	): Promise<Response> {
+		try {
+			const { key, value } = body;
+			const accessToken = req.headers.authorization?.replace('Bearer ', '');
 
+			if (!accessToken) {
+				this.logger.warn('No access token provided for set-storage');
+				return res.status(401).json({ 
+					success: false,
+					message: 'Access token required' 
+				});
+			}
+
+			this.logger.info(`Setting storage: key=${key}`);
+
+			const storage = this.manageService.createStorage(accessToken);
+			await storage.set(key, value);
+
+			this.logger.info(`Storage set successfully for key: ${key}`);
+
+			return res.status(200).json({ 
+				success: true,
+				message: 'Storage set successfully',
+				key 
+			});
+		} catch (error) {
+			const errorDetail =
+				error instanceof Error
+					? {
+						name: error.name,
+						message: error.message,
+						stack: error.stack,
+					}
+					: {
+						name: 'UnknownError',
+						message: String(error),
+						stack: null,
+					};
+			this.logger.error(`Error in set-storage: ${JSON.stringify(errorDetail)}`);
+			return res.status(500).json({ 
+				success: false,
+				message: 'Internal Server Error' 
+			});
+		}
 	}
 }

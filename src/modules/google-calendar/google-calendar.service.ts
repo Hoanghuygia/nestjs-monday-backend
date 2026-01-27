@@ -233,4 +233,42 @@ export class GoogleCalendarService {
 			return [];
 		}
 	}
+
+	async syncEventsWithToken(
+		calendarId: string,
+		syncToken?: string,
+	): Promise<{ events: GoogleCalendarEvent[]; nextSyncToken: string }> {
+		try {
+			this.logger.info(`Syncing events for calendar ${calendarId} with syncToken: ${syncToken ? 'yes' : 'no (initial sync)'}`);
+			
+			const response = await this.calendar.events.list({
+				calendarId,
+				syncToken: syncToken || undefined,
+				singleEvents: true,
+				showDeleted: true,
+				maxResults: 2500,
+			});
+
+			const events = (response.data.items || []) as GoogleCalendarEvent[];
+			const nextSyncToken = response.data.nextSyncToken || '';
+
+			this.logger.info(`Sync completed: ${events.length} events, nextSyncToken: ${nextSyncToken}`);
+			
+			return {
+				events,
+				nextSyncToken,
+			};
+		} catch (error) {
+			const err = error as any;
+			
+			// If syncToken is invalid, do a full sync
+			if (err.code === 410) {
+				this.logger.warn('SyncToken expired, performing full sync');
+				return this.syncEventsWithToken(calendarId);
+			}
+
+			this.logger.error(`Failed to sync events: ${err.message}`);
+			throw error;
+		}
+	}
 }
