@@ -44,16 +44,19 @@ export class GoogleCalendarService {
 		});
 	}
 
-	getAuthUrl(userId: string): string {
+	getAuthUrl(userId: string, accountId: number): string {
 		const scopes = [
 			'https://www.googleapis.com/auth/calendar.readonly',
 			'https://www.googleapis.com/auth/calendar.events',
 		];
 
+        const state = JSON.stringify({ userId, accountId });
+        const encodedState = Buffer.from(state).toString('base64');
+
 		return this.oauth2Client.generateAuthUrl({
 			access_type: 'offline',
 			scope: scopes,
-			state: userId,
+			state: encodedState,
 			prompt: 'consent',
 		});
 	}

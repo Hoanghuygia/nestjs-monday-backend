@@ -3,6 +3,7 @@ import { Logger } from '@/src/utils/logger';
 import { GoogleCalendarService } from '../google-calendar.service';
 import { CalendarSubitemService } from '../calendar-subitem.service';
 import { ManageService } from '../../management/manage.service';
+import { AuthService } from '../../auth/auth.service';
 
 @Injectable()
 export class CalendarWebhookService {
@@ -10,8 +11,9 @@ export class CalendarWebhookService {
 		private readonly googleCalendarService: GoogleCalendarService,
 		private readonly calendarSubitemService: CalendarSubitemService,
 		private readonly manageService: ManageService,
+		private readonly authService: AuthService,
 		private readonly logger: Logger,
-	) {}
+	) { }
 
 	async processCalendarChange(
 		userId: string,
@@ -127,6 +129,8 @@ export class CalendarWebhookService {
 			);
 
 			this.logger.info(`Initial sync completed: ${events.length} events, syncToken obtained`);
+			this.logger.info(`Events: ${JSON.stringify(events)}`);
+			this.logger.info(`Next syncToken: ${nextSyncToken}`);
 
 			// Store syncToken
 			if (nextSyncToken) {
@@ -143,9 +147,9 @@ export class CalendarWebhookService {
 		}
 	}
 
-	async handleOAuthCallback(code: string, userId: string): Promise<void> {
+	async handleOAuthCallback(code: string, userId: string, accountId: number): Promise<void> {
 		try {
-			this.logger.info(`Processing OAuth callback for userId: ${userId}`);
+			this.logger.info(`Processing OAuth callback for userId: ${userId}, accountId: ${accountId}`);
 
 			// Exchange code for tokens
 			const tokens = await this.googleCalendarService.getTokenFromCode(code);
@@ -156,22 +160,40 @@ export class CalendarWebhookService {
 			await secureStorage.set(`google-calendar-tokens:${userId}`, JSON.stringify(tokens));
 			this.logger.info(`OAuth tokens stored for user ${userId}`);
 
-			// Create storage for calendar configuration
-			const storage = this.manageService.createStorage(tokens.access_token);
+			const mondayAccessToken = await this.authService.getAccessToken(accountId.toString());
+			this.logger.info(`Monday access token received: ${JSON.stringify(mondayAccessToken)}`);
+			if (!mondayAccessToken) {
+				throw new Error(`No access token found for accountId: ${accountId}`);
+			}
 
-			// TODO: Get calendarId from storage config
-			// const storageKey = 'calendar-config';
-			// const calendarConfig = await storage.get(storageKey) as any;
-			// const calendarId = calendarConfig?.calendarId || 'primary';
+			// Create storage for calendar configuration
+			const storage = this.manageService.createStorage(mondayAccessToken.access_token);
+
+			const storageKey = 'calendar-config';
+			const calendarConfig = await storage.get(storageKey) as any;
+
+			// if (!calendarConfig.success || !calendarConfig.value) {
+			// 	this.logger.warn(`No calendar config found for user ${userId}`);
+			// 	return;
+			// }
+
+			this.logger.info(`Retrieved calendar config from storage: ${JSON.stringify(calendarConfig)}`);
+			
+			// Parse the JSON string from storage value
+			const parsedConfig = JSON.parse(calendarConfig.value);
+			const calendarId = parsedConfig?.calendarId || 'primary';
+
+			this.logger.info(`Parsed config: ${JSON.stringify(parsedConfig)}`);
+			this.logger.info(`Using calendar ID from config or default: ${calendarId}`);
 
 			// Hardcoded calendarId for now
-			const calendarId = '1c98fb7b950790094940b94f1f008d150e8b78ad8e5420d9b88439a09af2f26e@group.calendar.google.com';
-
-			// Setup calendar watch
-			await this.setupCalendarWatch(userId, tokens.access_token, calendarId);
+			// const calendarId = '1c98fb7b950790094940b94f1f008d150e8b78ad8e5420d9b88439a09af2f26e@group.calendar.google.com';
 
 			// Perform initial sync to get syncToken
 			await this.performInitialSync(userId, tokens.access_token, calendarId);
+
+			// Setup calendar watch
+			await this.setupCalendarWatch(userId, tokens.access_token, calendarId);
 
 			this.logger.info(`OAuth callback processing completed for user ${userId}`);
 		} catch (error) {

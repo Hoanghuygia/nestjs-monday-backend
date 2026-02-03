@@ -72,7 +72,7 @@ export class CalendarWebhookController {
 	@Get('auth/callback')
 	async handleOAuthCallback(
 		@Query('code') code: string,
-		@Query('state') userId: string,
+		@Query('state') state: string,
 		@Res() res: Response,
 	) {
 		try {
@@ -80,10 +80,16 @@ export class CalendarWebhookController {
 				return res.status(HttpStatus.BAD_REQUEST).send('Authorization code missing');
 			}
 
-			this.logger.info(`Code and state received: code=${code}, userId=${userId}`);
+			this.logger.info(`Code and state received: code=${code}, state=${state}`);
+
+			// Decode state
+			const decodedState = Buffer.from(state, 'base64').toString('utf-8');
+			const { userId, accountId } = JSON.parse(decodedState);
+
+			this.logger.info(`Decoded state: userId=${userId}, accountId=${accountId}`);
 
 			// Handle OAuth callback logic through service
-			await this.calendarWebhookService.handleOAuthCallback(code, userId);
+			await this.calendarWebhookService.handleOAuthCallback(code, userId, accountId);
 
 			return res.send(`
 				<html>
@@ -102,13 +108,17 @@ export class CalendarWebhookController {
 	}
 
 	@Get('auth/connect')
-	async connectGoogleCalendar(@Query('userId') userId: string, @Res() res: Response) {
+	async connectGoogleCalendar(
+		@Query('userId') userId: string,
+		@Query('accountId') accountId: number,
+		@Res() res: Response
+	) {
 		try {
-			if (!userId) {
-				return res.status(HttpStatus.BAD_REQUEST).send('User ID required');
+			if (!userId || !accountId) {
+				return res.status(HttpStatus.BAD_REQUEST).send('User ID and Account ID required');
 			}
 
-			const authUrl = this.googleCalendarService.getAuthUrl(userId);
+			const authUrl = this.googleCalendarService.getAuthUrl(userId, accountId);
 			return res.redirect(authUrl);
 		} catch (error) {
 			const err = error as Error;

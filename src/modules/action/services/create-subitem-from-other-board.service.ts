@@ -32,6 +32,8 @@ export class CreateSubitemFromOtherBoardService {
 			return;
 		}
 
+		this.logger.info(`AccountId: ${req.session.accountId}`);
+
 		const { boardId, scheduleBoardId } = body.payload.inputFields;
 		this.logger.info(
 			`Input field: ${JSON.stringify(body.payload.inputFields)}`,
@@ -47,6 +49,8 @@ export class CreateSubitemFromOtherBoardService {
 		const accessToken = await this.authService.getAccessToken(
 			req.session.accountId.toString(),
 		);
+
+		this.logger.info(`AccessToken: ${accessToken}`);
 		if (!accessToken) {
 			this.logger.error(`No access token found`);
 			return;

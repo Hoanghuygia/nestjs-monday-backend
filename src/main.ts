@@ -24,7 +24,7 @@ async function bootstrap() {
 
   // Load allowed origins
   const serverAddress = envManage.get('MNDY_SERVER_ADDRESS');
-  // const clientAddress = envManage.get('FRONTEND_URL');
+  const clientAddress = envManage.get('FRONTEND_URL');
 
   const allowedOrigins: string[] = [];
   if (!serverAddress || typeof serverAddress !== 'string') {
@@ -35,11 +35,14 @@ async function bootstrap() {
     allowedOrigins.push(serverAddress);
   }
 
-  // if (!clientAddress || typeof clientAddress !== 'string') {
-  //   loggerMonday.error('FRONTEND_URL is not set in environment variables');
-  // } else {
-  //   allowedOrigins.push(clientAddress);
-  // }
+  if (!clientAddress || typeof clientAddress !== 'string') {
+    loggerMonday.warn('FRONTEND_URL is not set in environment variables');
+  } else {
+    allowedOrigins.push(clientAddress);
+  }
+
+  // Add wildcard for Monday.com apps tunnel domains
+  allowedOrigins.push('https://*.apps-tunnel.monday.app');
 
   loggerMonday.info(`CORS allowed origins: ${allowedOrigins.join(', ')}`);
 
@@ -52,9 +55,26 @@ async function bootstrap() {
         // block requests without Origin header
         return callback(null, false);
       }
+      
+      // Check exact match first
       if (allowedOrigins.includes(origin)) {
         return callback(null, true);
       }
+      
+      // Check wildcard patterns (e.g., *.apps-tunnel.monday.app)
+      const isAllowed = allowedOrigins.some(allowedOrigin => {
+        if (allowedOrigin.includes('*')) {
+          const pattern = allowedOrigin.replace(/\*/g, '.*');
+          const regex = new RegExp(`^${pattern}$`);
+          return regex.test(origin);
+        }
+        return false;
+      });
+      
+      if (isAllowed) {
+        return callback(null, true);
+      }
+      
       return callback(new Error(`Not allowed by CORS: ${origin}`), false);
     },
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
