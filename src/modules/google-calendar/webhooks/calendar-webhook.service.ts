@@ -89,7 +89,9 @@ export class CalendarWebhookService {
 			this.logger.info(`Using calendar ID: ${calendarId}`);
 
 			const webhookUrl = `${process.env.MDY_SERVER_ADDRESS}/api/v1/google-calendar/webhook`;
-			const channelId = `monday-calendar-${userId}-${Date.now()}`;
+			// Sanitize userId to ensure it only contains alphanumeric characters, hyphens, and underscores
+			const sanitizedUserId = userId.replace(/[^a-zA-Z0-9-_]/g, '-');
+			const channelId = `monday-calendar-${sanitizedUserId}-${Date.now()}`;
 
 			this.logger.info(`Setting up calendar watch with webhookUrl: ${webhookUrl}, channelId: ${channelId}`);
 
@@ -158,36 +160,37 @@ export class CalendarWebhookService {
 			// Store tokens securely
 			const secureStorage = this.manageService.getSecureStorage();
 			await secureStorage.set(`google-calendar-tokens:${userId}`, JSON.stringify(tokens));
-			this.logger.info(`OAuth tokens stored for user ${userId}`);
+			this.logger.info(`OAuth tokens stored for user ${userId} with ${JSON.stringify(tokens)}`);
 
 			const mondayAccessToken = await this.authService.getAccessToken(accountId.toString());
 			this.logger.info(`Monday access token received: ${JSON.stringify(mondayAccessToken)}`);
-			if (!mondayAccessToken) {
-				throw new Error(`No access token found for accountId: ${accountId}`);
-			}
+			// if (!mondayAccessToken) {
+			// 	throw new Error(`No access token found for accountId: ${accountId}`);
+			// }
 
 			// Create storage for calendar configuration
-			const storage = this.manageService.createStorage(mondayAccessToken.access_token);
+			// const storage = this.manageService.createStorage(mondayAccessToken.access_token);
 
-			const storageKey = 'calendar-config';
-			const calendarConfig = await storage.get(storageKey) as any;
+			// const storageKey = 'calendar-config';
+			// const calendarConfig = await storage.get(storageKey) as any;
 
 			// if (!calendarConfig.success || !calendarConfig.value) {
 			// 	this.logger.warn(`No calendar config found for user ${userId}`);
 			// 	return;
 			// }
 
-			this.logger.info(`Retrieved calendar config from storage: ${JSON.stringify(calendarConfig)}`);
+			// this.logger.info(`Retrieved calendar config from storage: ${JSON.stringify(calendarConfig)}`);
 			
 			// Parse the JSON string from storage value
-			const parsedConfig = JSON.parse(calendarConfig.value);
-			const calendarId = parsedConfig?.calendarId || 'primary';
+			// const parsedConfig = JSON.parse(calendarConfig.value);
+			// const calendarId = parsedConfig?.calendarId || 'primary';
 
-			this.logger.info(`Parsed config: ${JSON.stringify(parsedConfig)}`);
-			this.logger.info(`Using calendar ID from config or default: ${calendarId}`);
+			// this.logger.info(`Parsed config: ${JSON.stringify(parsedConfig)}`);
+			// this.logger.info(`Using calendar ID from config or default: ${calendarId}`);
 
 			// Hardcoded calendarId for now
-			// const calendarId = '1c98fb7b950790094940b94f1f008d150e8b78ad8e5420d9b88439a09af2f26e@group.calendar.google.com';
+			const calendarId = '1c98fb7b950790094940b94f1f008d150e8b78ad8e5420d9b88439a09af2f26e@group.calendar.google.com';
+
 
 			// Perform initial sync to get syncToken
 			await this.performInitialSync(userId, tokens.access_token, calendarId);

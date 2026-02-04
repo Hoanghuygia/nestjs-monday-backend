@@ -144,6 +144,53 @@ export class GoogleCalendarService {
 		}
 	}
 
+	async createCalendarEvent(
+		calendarId: string,
+		title: string,
+		startTime: string,
+		endTime: string,
+		description?: string,
+		attendeeEmail?: string,
+		link?: string,
+	): Promise<GoogleCalendarEvent | null> {
+		try {
+			const eventDescription = [
+				description,
+				link ? `\n\nLink: ${link}` : '',
+			].filter(Boolean).join('');
+
+			const event = {
+				summary: title,
+				description: eventDescription,
+				start: {
+					dateTime: startTime,
+					timeZone: 'Asia/Ho_Chi_Minh',
+				},
+				end: {
+					dateTime: endTime,
+					timeZone: 'Asia/Ho_Chi_Minh',
+				},
+				attendees: attendeeEmail ? [{ email: attendeeEmail }] : [],
+			};
+
+			this.logger.info(`Creating calendar event with data: ${JSON.stringify(event)}`);
+
+			const response = await this.calendar.events.insert({
+				calendarId,
+				requestBody: event,
+			});
+
+			this.logger.info(`✅ Successfully created event: ${response.data.id}`);
+			this.logger.info(`Event link: ${response.data.htmlLink}`);
+			return response.data as GoogleCalendarEvent;
+		} catch (error) {
+			const err = error as Error;
+			this.logger.error(`❌ Failed to create calendar event: ${err.message}`);
+			this.logger.error(`Error stack: ${err.stack}`);
+			return null;
+		}
+	}
+
 	async watchCalendar(
 		calendarId: string,
 		channelId: string,
