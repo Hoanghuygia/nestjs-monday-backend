@@ -85,4 +85,62 @@ export class MondayFieldService {
 
         return columns ?? [];
     }
+
+    getCalendarConfigList() {
+        this.logger.info(`Call endpoint get calendar config list`);
+
+        const schema = {
+            title: {
+                title: "Value",
+                type: "primitive",
+                primitiveType: "string",
+                isNullable: false,
+                isArray: false,
+            },
+            assignee: {
+                title: "Assignee",
+                type: "primitive",
+                primitiveType: "string",
+                isNullable: false,
+                isArray: false,
+            },
+            startTime: {
+                title: "Start Time",
+                type: "primitive",
+                primitiveType: "date",
+                isNullable: false,
+                isArray: false,
+            },
+            endTime: {
+                title: "End Time",
+                type: "primitive",
+                primitiveType: "date",
+                isNullable: false,
+                isArray: false,
+            },
+            duration: {
+                title: "Duration",
+                type: "primitive",
+                primitiveType: "string",
+                isNullable: false,
+                isArray: false,
+            },
+            link: {
+                title: "Link",
+                type: "primitive",
+                primitiveType: "string",
+                isNullable: true,
+                isArray: false,
+            },
+            description: {
+                title: "Description",
+                type: "primitive",
+                primitiveType: "string",
+                isNullable: false,
+                isArray: false,
+            }
+        };
+
+        return schema;
+    }
 }
