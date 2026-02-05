@@ -11,6 +11,9 @@ class SyncItemInCalendarFieldsDTO {
 
     @IsObject()
     calendarConfig!: CalendarConfig;
+
+    @IsString()
+    columnId!: string;
 }
 
 export class SyncItemInCalendarDTO extends ActionRequestDTO<SyncItemInCalendarFieldsDTO> { }

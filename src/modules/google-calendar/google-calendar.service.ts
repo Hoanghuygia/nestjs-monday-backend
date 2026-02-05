@@ -151,23 +151,31 @@ export class GoogleCalendarService {
 		endTime: string,
 		description?: string,
 		attendeeEmail?: string,
-		link?: string,
+		metadata?: Record<string, string>,
 	): Promise<GoogleCalendarEvent | null> {
 		try {
-			const eventDescription = [
-				description,
-				link ? `\n\nLink: ${link}` : '',
-			].filter(Boolean).join('');
+			const normalizedStartTime = this.normalizeDateTime(startTime);
+			const normalizedEndTime = this.normalizeDateTime(endTime);
+
+			if (!normalizedStartTime || !normalizedEndTime) {
+				this.logger.error(
+					`Invalid datetime format. startTime=${startTime}, endTime=${endTime}`,
+				);
+				return null;
+			}
 
 			const event = {
 				summary: title,
-				description: eventDescription,
+				description: description || '',
+				extendedProperties: metadata
+					? { private: metadata }
+					: undefined,
 				start: {
-					dateTime: startTime,
+					dateTime: normalizedStartTime,
 					timeZone: 'Asia/Ho_Chi_Minh',
 				},
 				end: {
-					dateTime: endTime,
+					dateTime: normalizedEndTime,
 					timeZone: 'Asia/Ho_Chi_Minh',
 				},
 				attendees: attendeeEmail ? [{ email: attendeeEmail }] : [],
@@ -180,7 +188,6 @@ export class GoogleCalendarService {
 				requestBody: event,
 			});
 
-			this.logger.info(`✅ Successfully created event: ${response.data.id}`);
 			this.logger.info(`Event link: ${response.data.htmlLink}`);
 			return response.data as GoogleCalendarEvent;
 		} catch (error) {
@@ -189,6 +196,59 @@ export class GoogleCalendarService {
 			this.logger.error(`Error stack: ${err.stack}`);
 			return null;
 		}
+	}
+
+	private normalizeDateTime(input: string): string | null {
+		if (!input) return null;
+
+		const trimmed = input.trim();
+
+		if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(trimmed)) {
+			return trimmed;
+		}
+
+		const monthMap: Record<string, string> = {
+			january: '01',
+			february: '02',
+			march: '03',
+			april: '04',
+			may: '05',
+			june: '06',
+			july: '07',
+			august: '08',
+			september: '09',
+			october: '10',
+			november: '11',
+			december: '12',
+		};
+
+		const monthNameMatch = trimmed.match(/^\d{2}\s+[A-Za-z]+\s+\d{4}\s+\d{2}:\d{2}$/);
+		if (monthNameMatch) {
+			const [dayStr, monthStr, yearStr, timeStr] = trimmed.split(/\s+/);
+			const monthKey = monthStr.toLowerCase();
+			const month = monthMap[monthKey];
+			if (!month) return null;
+			const [hour, minute] = timeStr.split(':');
+			return `${yearStr}-${month}-${dayStr}T${hour}:${minute}:00+07:00`;
+		}
+
+		const ymdMatch = trimmed.match(/^\d{4}[-/]\d{2}[-/]\d{2}\s+\d{2}:\d{2}$/);
+		if (ymdMatch) {
+			const [dateStr, timeStr] = trimmed.split(/\s+/);
+			const [year, month, day] = dateStr.split(/[-/]/);
+			const [hour, minute] = timeStr.split(':');
+			return `${year}-${month}-${day}T${hour}:${minute}:00+07:00`;
+		}
+
+		const dmyMatch = trimmed.match(/^\d{2}[-/]\d{2}[-/]\d{4}\s+\d{2}:\d{2}$/);
+		if (dmyMatch) {
+			const [dateStr, timeStr] = trimmed.split(/\s+/);
+			const [day, month, year] = dateStr.split(/[-/]/);
+			const [hour, minute] = timeStr.split(':');
+			return `${year}-${month}-${day}T${hour}:${minute}:00+07:00`;
+		}
+
+		return null;
 	}
 
 	async watchCalendar(
