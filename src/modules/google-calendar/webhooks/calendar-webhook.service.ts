@@ -1,25 +1,57 @@
 import { Injectable } from '@nestjs/common';
 import { Logger } from '@/src/utils/logger';
 import { GoogleCalendarService } from '../google-calendar.service';
-import { CalendarSubitemService } from '../calendar-subitem.service';
 import { ManageService } from '../../management/manage.service';
 import { AuthService } from '../../auth/auth.service';
+import type { CalendarDomainEvent } from '../@types/calendar-domain-event.type';
 
 @Injectable()
 export class CalendarWebhookService {
 	constructor(
 		private readonly googleCalendarService: GoogleCalendarService,
-		private readonly calendarSubitemService: CalendarSubitemService,
 		private readonly manageService: ManageService,
 		private readonly authService: AuthService,
 		private readonly logger: Logger,
 	) { }
 
-	async processCalendarChange(
-		userId: string,
-		resourceUri: string,
-		channelId: string,
-	): Promise<void> {
+	private readonly syncQueue = new Map<string, Promise<void>>();
+
+	async triggerSync(userId: string, resourceUri: string): Promise<void> {
+		const calendarId = this.extractCalendarIdFromUri(resourceUri);
+		if (!calendarId) {
+			this.logger.warn('Could not extract calendar ID from resource URI');
+			return;
+		}
+
+		const queueKey = `calendar-sync:${userId}:${calendarId}`;
+		this.enqueueSync(queueKey, async () => {
+			await this.processCalendarWebhook(userId, resourceUri);
+		});
+	}
+
+	private enqueueSync(queueKey: string, task: () => Promise<void>): void {
+		const previous = this.syncQueue.get(queueKey) ?? Promise.resolve();
+
+		const next = previous
+			.catch(() => undefined)
+			.then(task)
+			.catch((error) => {
+				const err = error as Error;
+				this.logger.error(`Sync task failed: ${err.message}`);
+			});
+
+		this.syncQueue.set(
+			queueKey,
+			next.finally(() => {
+				if (this.syncQueue.get(queueKey) === next) {
+					this.syncQueue.delete(queueKey);
+				}
+			}),
+		);
+	}
+
+	async processCalendarWebhook(userId: string, resourceUri: string,): Promise<void> {
+		this.logger.debug("Processing calendar webhook...");
 		try {
 			// Get user's calendar tokens
 			const secureStorage = this.manageService.getSecureStorage();
@@ -29,8 +61,6 @@ export class CalendarWebhookService {
 				this.logger.warn(`No tokens found for user ${userId}`);
 				return;
 			}
-
-			this.logger.info(`Tokens data retrieved for user ${userId}: ${JSON.stringify(tokensData)}`);
 
 			const tokens = typeof tokensData === 'string'
 				? JSON.parse(tokensData)
@@ -54,17 +84,11 @@ export class CalendarWebhookService {
 			const syncTokenKey = `calendar-sync-token:${userId}:${calendarId}`;
 			const syncToken = await secureStorage.get(syncTokenKey) as string | null;
 
-			this.logger.info(`Using syncToken: ${syncToken ? 'yes' : 'no (initial sync)'}`);
-			this.logger.info(`Sync token value: ${syncToken}`);
-
 			// Use incremental sync with syncToken
 			const { events, nextSyncToken } = await this.googleCalendarService.syncEventsWithToken(
 				calendarId,
 				syncToken || undefined,
 			);
-
-			this.logger.info(`Synced ${events.length} events (including deleted)`);
-			this.logger.info(`Event: ${JSON.stringify(events)}`);
 
 			// Store new syncToken
 			if (nextSyncToken) {
@@ -72,14 +96,35 @@ export class CalendarWebhookService {
 				this.logger.info('Updated syncToken in storage');
 			}
 
-			this.logger.info(`Processing events !!!!!!!!`);
+			if (events.length === 0) {
+				this.logger.warn('No events returned from syncEventsWithToken');
+				return;
+			}
 
-			// Handle logic to process events 
+			// Handle logic to process events
+			this.syncEventsInMonday(events);
 
 		} catch (error) {
 			const err = error as Error;
 			this.logger.error(`Error processing calendar change: ${err.message}`);
 		}
+	}
+
+	async syncEventsInMonday(events: CalendarDomainEvent[]): Promise<void> {
+		this.logger.info(`Syncing ${JSON.stringify(events)} events to Monday.com...`);
+
+		const changeTypeHandler: Record<string, () => void> = {
+			CREATE: () => console.log("Created"),
+			UPDATE: () => console.log("Updated"),
+			DELETE: () => console.log("Delete"),
+		};
+
+		const handler =
+			changeTypeHandler[events[0].changeType] ??
+			(() => console.log("Unknown status"));
+
+		handler();
+
 	}
 
 	async setupCalendarWatch(userId: string, accessToken: string, calendarId: string): Promise<void> {
@@ -126,12 +171,9 @@ export class CalendarWebhookService {
 			this.googleCalendarService.setCredentials(accessToken);
 
 			// Perform initial sync to get syncToken
-			const { events, nextSyncToken } = await this.googleCalendarService.syncEventsWithToken(
+			const { nextSyncToken } = await this.googleCalendarService.syncEventsWithToken(
 				calendarId,
 			);
-
-			this.logger.info(`Initial sync completed: ${events.length} events, syncToken obtained`);
-			this.logger.info(`Events: ${JSON.stringify(events)}`);
 			this.logger.info(`Next syncToken: ${nextSyncToken}`);
 
 			// Store syncToken
@@ -180,7 +222,7 @@ export class CalendarWebhookService {
 			// }
 
 			// this.logger.info(`Retrieved calendar config from storage: ${JSON.stringify(calendarConfig)}`);
-			
+
 			// Parse the JSON string from storage value
 			// const parsedConfig = JSON.parse(calendarConfig.value);
 			// const calendarId = parsedConfig?.calendarId || 'primary';

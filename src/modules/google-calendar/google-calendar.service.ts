@@ -4,7 +4,8 @@ import { google, calendar_v3 } from 'googleapis';
 import { OAuth2Client } from 'google-auth-library';
 import { Logger } from '@/src/utils/logger';
 import type { GoogleCalendarEvent, CalendarChannelInfo } from './@types/calendar-event.type';
-import { CalendarEventDto } from './dto/calendar-event.dto';
+import { CalendarDomainEvent } from '@/src/modules/google-calendar/@types/calendar-domain-event.type';
+import { mapGoogleEventToDomain } from '@/src/modules/google-calendar/mappers/calendar-event.mapper';
 
 @Injectable()
 export class GoogleCalendarService {
@@ -111,36 +112,6 @@ export class GoogleCalendarService {
 			this.logger.error(`Failed to list events: ${err.message}`);
 			this.logger.error(`Error stack: ${err.stack}`);
 			return [];
-		}
-	}
-
-	async createEvent(calendarId: string, eventData: CalendarEventDto): Promise<GoogleCalendarEvent | null> {
-		try {
-			const event = {
-				summary: eventData.summary,
-				description: eventData.description,
-				start: {
-					dateTime: eventData.startDateTime,
-					timeZone: eventData.timeZone || 'UTC',
-				},
-				end: {
-					dateTime: eventData.endDateTime,
-					timeZone: eventData.timeZone || 'UTC',
-				},
-				attendees: eventData.attendees?.map(email => ({ email })),
-			};
-
-			const response = await this.calendar.events.insert({
-				calendarId,
-				requestBody: event,
-			});
-
-			this.logger.info(`Created event: ${response.data.id}`);
-			return response.data as GoogleCalendarEvent;
-		} catch (error) {
-			const err = error as Error;
-			this.logger.error(`Failed to create event: ${err.message}`);
-			return null;
 		}
 	}
 
@@ -347,10 +318,8 @@ export class GoogleCalendarService {
 	async syncEventsWithToken(
 		calendarId: string,
 		syncToken?: string,
-	): Promise<{ events: GoogleCalendarEvent[]; nextSyncToken: string }> {
-		try {
-			this.logger.info(`Syncing events for calendar ${calendarId} with syncToken: ${syncToken ? 'yes' : 'no (initial sync)'}`);
-			
+	): Promise<{ events: CalendarDomainEvent[]; nextSyncToken: string }> {
+		try {			
 			const response = await this.calendar.events.list({
 				calendarId,
 				syncToken: syncToken || undefined,
@@ -359,10 +328,8 @@ export class GoogleCalendarService {
 				maxResults: 2500,
 			});
 
-			const events = (response.data.items || []) as GoogleCalendarEvent[];
+			const events = (response.data.items || []).map(mapGoogleEventToDomain);
 			const nextSyncToken = response.data.nextSyncToken || '';
-
-			this.logger.info(`Sync completed: ${events.length} events, nextSyncToken: ${nextSyncToken}`);
 			
 			return {
 				events,

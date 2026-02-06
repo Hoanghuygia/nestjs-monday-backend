@@ -4,7 +4,6 @@ import { ManageService } from "../management/manage.service";
 import { BoardObjectType, ColumnType, GetBoardsQuery, GetColumnsQuery } from "@/src/graphql/generated/graphql";
 import { getBoardsQuery, getColumnsQuery } from "@/src/graphql/queries/query/board.graphql";
 import { StandardResponse } from "@/src/common/filters/dtos/standard-response";
-import { BoardDataDTO } from "./@types/board-data.type";
 
 @Injectable()
 export class MondayFieldService {
@@ -102,38 +101,31 @@ export class MondayFieldService {
                 type: "primitive",
                 primitiveType: "string",
                 isNullable: false,
-                isArray: false,
+                isArray: true,
             },
             startTime: {
                 title: "Start Time",
                 type: "primitive",
-                primitiveType: "date",
+                primitiveType: "string",
                 isNullable: false,
                 isArray: false,
             },
             endTime: {
                 title: "End Time",
                 type: "primitive",
-                primitiveType: "date",
-                isNullable: false,
-                isArray: false,
-            },
-            duration: {
-                title: "Duration",
-                type: "primitive",
                 primitiveType: "string",
                 isNullable: false,
-                isArray: false,
-            },
-            link: {
-                title: "Link",
-                type: "primitive",
-                primitiveType: "string",
-                isNullable: true,
                 isArray: false,
             },
             description: {
                 title: "Description",
+                type: "primitive",
+                primitiveType: "string",
+                isNullable: false,
+                isArray: false,
+            },
+            userId: {
+                title: "UserId",
                 type: "primitive",
                 primitiveType: "string",
                 isNullable: false,

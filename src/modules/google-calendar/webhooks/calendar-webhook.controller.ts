@@ -55,7 +55,7 @@ export class CalendarWebhookController {
 
 			// Handle exists event (new or updated event)
 			if (resourceState === 'exists') {
-				await this.calendarWebhookService.processCalendarChange(userId, resourceUri, channelId);
+				void this.calendarWebhookService.triggerSync(userId, resourceUri);
 			}
 
 			return res.status(HttpStatus.OK).json({ success: true });

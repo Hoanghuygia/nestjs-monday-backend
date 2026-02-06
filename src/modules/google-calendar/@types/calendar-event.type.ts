@@ -1,36 +1,18 @@
-export interface GoogleCalendarEvent {
-	id: string;
-	summary: string;
-	description?: string;
-	start: {
-		dateTime: string;
-		timeZone?: string;
-	};
-	end: {
-		dateTime: string;
-		timeZone?: string;
-	};
-	attendees?: Array<{
-		email: string;
-		displayName?: string;
-		responseStatus?: string;
-	}>;
-	creator?: {
-		email: string;
-		displayName?: string;
-	};
-	organizer?: {
-		email: string;
-		displayName?: string;
-	};
-	status: string;
-	htmlLink: string;
-	created: string;
-	updated: string;
+import type { calendar_v3 } from 'googleapis';
+
+export type GoogleCalendarEventExtendedPrivate = Record<string, string> & {
+	itemId?: string;
+	boardId?: string;
+	userId?: string;
+	mondayItemId?: string;
+	mondayBoardId?: string;
+};
+
+export interface GoogleCalendarEvent extends calendar_v3.Schema$Event {
 	extendedProperties?: {
-		private?: Record<string, string>;
+		private?: GoogleCalendarEventExtendedPrivate;
 		shared?: Record<string, string>;
-	};
+	} | null;
 }
 
 export interface CalendarChannelInfo {
