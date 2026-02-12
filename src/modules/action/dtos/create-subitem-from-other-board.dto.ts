@@ -7,9 +7,6 @@ class CreateSubitemFromOtherBoardFieldsDTO {
 
     @IsString()
     scheduleBoardId!: string;
-
-    @IsString()
-    scheduleColumnId!: string;
 }
 
 export class CreateSubitemFromOtherBoardDTO extends ActionRequestDTO<CreateSubitemFromOtherBoardFieldsDTO> { }

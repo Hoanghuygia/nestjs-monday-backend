@@ -4,7 +4,6 @@ import { ManageService } from "../management/manage.service";
 import { BoardObjectType, ColumnType, GetBoardsQuery, GetColumnsQuery } from "@/src/graphql/generated/graphql";
 import { getBoardsQuery, getColumnsQuery } from "@/src/graphql/queries/query/board.graphql";
 import { StandardResponse } from "@/src/common/filters/dtos/standard-response";
-import { BoardDataDTO } from "./@types/board-data.type";
 
 @Injectable()
 export class MondayFieldService {
@@ -84,5 +83,56 @@ export class MondayFieldService {
         this.logger.info(`Call endpoint lookup remote column success with column: ${JSON.stringify(columns)}`);
 
         return columns ?? [];
+    }
+
+    getCalendarConfigList() {
+        this.logger.info(`Call endpoint get calendar config list`);
+
+        const schema = {
+            title: {
+                title: "Value",
+                type: "primitive",
+                primitiveType: "string",
+                isNullable: false,
+                isArray: false,
+            },
+            assignee: {
+                title: "Assignee",
+                type: "primitive",
+                primitiveType: "string",
+                isNullable: false,
+                isArray: true,
+            },
+            startTime: {
+                title: "Start Time",
+                type: "primitive",
+                primitiveType: "string",
+                isNullable: false,
+                isArray: false,
+            },
+            endTime: {
+                title: "End Time",
+                type: "primitive",
+                primitiveType: "string",
+                isNullable: false,
+                isArray: false,
+            },
+            description: {
+                title: "Description",
+                type: "primitive",
+                primitiveType: "string",
+                isNullable: false,
+                isArray: false,
+            },
+            userId: {
+                title: "UserId",
+                type: "primitive",
+                primitiveType: "string",
+                isNullable: false,
+                isArray: false,
+            }
+        };
+
+        return schema;
     }
 }

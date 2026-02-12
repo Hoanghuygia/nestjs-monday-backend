@@ -24,6 +24,7 @@ export const getAllItemsQueryWithColumns = gql`
 `;
 
 export const getAllItemsAndSubItem = gql`
+  ${DisplayValueFragment}
   query GetAllItemsAndSubItem($boardId: ID!, $cursor: String, $columnIds: [String!]) {
     boards(ids: [$boardId]) {
       items_count
@@ -54,4 +55,13 @@ export const getParentItemIdFromSubItemId = gql`
       }
     }
   }
+`;
+
+export const delteItemById = gql`
+	mutation deleteItem($itemId: ID!) {
+		delete_item(item_id: $itemId){
+			id
+			name
+		}
+	}
 `;

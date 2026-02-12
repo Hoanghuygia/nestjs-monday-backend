@@ -1,14 +1,21 @@
-import { Body, Controller, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Post, Req, Res, UseGuards } from '@nestjs/common';
 import type { Request, Response } from 'express';
+import jwt from 'jsonwebtoken';
 
-import { AuthGuardFactory } from '@/src/common/guards/auth.guard';
 import { Logger } from '@/src/utils/logger';
-import { SetDefaultColumnValueDTO } from '../account/dto/set-default-column-value.dto';
+import { SetStorageDto } from './dto/set-storage.dto';
+import { ManageService } from '../management/manage.service';
+import { DevGuard } from '@/src/common/guards/dev.guard';
+import { StandardResponse } from '@/src/common/filters/dtos/standard-response';
+import { SuccessResponseDTO } from '@/src/common/filters/dtos/success-response.dto';
 
 @Controller('monday')
-@UseGuards(AuthGuardFactory('MDY_SIGNING_SECRET'))
+@UseGuards(DevGuard)
 export class MondayController {
-	constructor(private readonly logger: Logger) { }
+	constructor(
+		private readonly logger: Logger,
+		private readonly manageService: ManageService,
+	) { }
 
 	@Post('test')
 	testEndpoint(
@@ -49,9 +56,132 @@ export class MondayController {
 		}
 	}
 
-	@Post('set-default-column-value')
-	async setDefaultColumnvalue(@Req() req: Request, @Res() res: Response, @Body() body: SetDefaultColumnValueDTO) {
-		this.logger.info(`Call endpoint set default column value`);
+	@Post('set-storage')
+	async setStorage(
+		@Req() req: Request,
+		@Res() res: Response,
+		@Body() body: SetStorageDto,
+	): Promise<Response> {
+		try {
+			const { key, value } = body;
+			const accessToken = req.headers.authorization?.replace('Bearer ', '');
 
+			if (!accessToken) {
+				this.logger.warn('No access token provided for set-storage');
+				return res.status(401).json({ 
+					success: false,
+					message: 'Access token required' 
+				});
+			}
+
+			this.logger.info(`Setting storage: key=${key}`);
+
+			const storage = this.manageService.createStorage(accessToken);
+			await storage.set(key, value);
+
+			this.logger.info(`Storage set successfully for key: ${key}`);
+
+			return res.status(200).json({ 
+				success: true,
+				message: 'Storage set successfully',
+				key 
+			});
+		} catch (error) {
+			const errorDetail =
+				error instanceof Error
+					? {
+						name: error.name,
+						message: error.message,
+						stack: error.stack,
+					}
+					: {
+						name: 'UnknownError',
+						message: String(error),
+						stack: null,
+					};
+			this.logger.error(`Error in set-storage: ${JSON.stringify(errorDetail)}`);
+			return res.status(500).json({ 
+				success: false,
+				message: 'Internal Server Error' 
+			});
+		}
+	}
+
+	@Post('generate-jwt-token')
+	async generateJwtToken(@Body() body: { accountId: number; expiresIn?: string }) {
+		const { accountId, expiresIn = '1h' } = body;
+		const parsedAccountId = Number(accountId);
+
+		if (!accountId || Number.isNaN(parsedAccountId)) {
+			this.logger.error(`No account id present`);
+			const errorResponse = StandardResponse.error(
+				null,
+				'NO_ACCOUNT_ID_PRESENT',
+				'No account id present',
+				'400',
+			);
+			throw new BadRequestException(errorResponse);
+		}
+
+		const mondaySecretKey = this.manageService.getSecret('MDY_SIGNING_SECRET');
+		this.logger.warn(`mondaySecretKey: ${mondaySecretKey}`);
+		if (!mondaySecretKey || typeof mondaySecretKey !== 'string') {
+			this.logger.error(`No monday secret key present`);
+			const errorResponse = StandardResponse.error(
+				null,
+				'NO_MONDAY_SECRET_KEY',
+				'No monday secret key present',
+				'400',
+			);
+			throw new BadRequestException(errorResponse);
+		}
+
+		try {
+			const payload = {
+				accountId,
+				iat: Math.floor(Date.now() / 1000),
+			};
+			const token = jwt.sign(payload, mondaySecretKey, { expiresIn } as any);
+
+			const refreshToken = jwt.sign({}, mondaySecretKey);
+
+			const successResponse = new SuccessResponseDTO();
+			successResponse.payload = {
+				token,
+				payload,
+				expiresIn,
+				bearer: `Bearer ${token}`,
+				refreshToken,
+			};
+
+			return StandardResponse.success(
+				successResponse,
+				'JWT_TOKEN_GENERATED_SUCCESSFULLY',
+				'JWT token generated successfully',
+				'200',
+			);
+		} catch (error) {
+			const errorDetail =
+				error instanceof Error
+					? {
+						name: error.name,
+						message: error.message,
+						stack: error.stack,
+					}
+					: {
+						name: 'UnknownError',
+						message: String(error),
+						stack: null,
+					};
+			this.logger.error(`Error in generate-jwt-token: ${JSON.stringify(errorDetail)}`);
+
+			const errorResponse = StandardResponse.error(
+				null,
+				'JWT_GENERATION_FAILED',
+				'Failed to generate JWT token',
+				'500',
+			);
+			throw new BadRequestException(errorResponse);
+		}
 	}
 }

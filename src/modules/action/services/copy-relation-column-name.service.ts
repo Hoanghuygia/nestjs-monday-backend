@@ -1,10 +1,9 @@
-import { BadRequestException, Injectable, UnauthorizedException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { ManageService } from "../../management/manage.service";
 import { AuthService } from "../../auth/auth.service";
 import { Logger } from "@/src/utils/logger";
 import { Request } from 'express';
 import { CopyRelationColumnToNameDTO } from "../dtos/copy-relation-column-to-name.dto";
-import { StandardResponse } from "@/src/common/filters/dtos/standard-response";
 import { fetchAllBoardItemsWithColums } from "@/src/graphql/api/query/query.fucntion";
 import { BatchRunUtils } from "@/src/utils/run.api";
 import { updateItemColumns } from "@/src/graphql/api/mutation/mutation.function";
@@ -26,13 +25,7 @@ export class CopyRelationColumnToNameService {
     async execute(req: Request, body: CopyRelationColumnToNameDTO) {
         if (!req.session.shortLivedToken || !req.session.accountId) {
             this.logger.error(`No shortlive token or accountId found`);
-            const errorResponse = StandardResponse.error(
-                null,
-                'INVALID_TOKEN_PAYLOAD',
-                'No shortlive token or accountId found',
-                '401',
-            );
-            throw new UnauthorizedException(errorResponse);
+            return;
         }
 
         const { subItemBoardId, subColumnBoardId } = body.payload.inputFields;
@@ -42,25 +35,13 @@ export class CopyRelationColumnToNameService {
 
         if (!sourceColumnId || !normalizeBoardId) {
             this.logger.error(`No boardId or columnId found`);
-            const errorResponse = StandardResponse.error(
-                null,
-                'INVALID_BOARD_ID_OR_COLUMN_ID',
-                'No boardId or columnId found',
-                '400',
-            );
-            throw new BadRequestException(errorResponse);
+            return;
         }
 
         const accessToken = await this.authService.getAccessToken(req.session.accountId.toString());
         if (!accessToken) {
             this.logger.error(`No access token found`);
-            const errorResponse = StandardResponse.error(
-                null,
-                'INVALID_TOKEN_PAYLOAD',
-                'No access token found',
-                '401',
-            );
-            throw new UnauthorizedException(errorResponse);
+            return;
         }
 
         const mondayClient = this.manageService.getMondayClient(accessToken.access_token);
@@ -70,11 +51,7 @@ export class CopyRelationColumnToNameService {
         this.logger.info(`Found ${foundItems.length} items to update`);
 
         if (foundItems.length === 0) {
-            return StandardResponse.success(
-                { count: 0, records: [] },
-                'NO_ITEMS_FOUND',
-                'No items found in board'
-            );
+            return;
         }
 
         // 2. Update name column for each item 
@@ -102,20 +79,6 @@ export class CopyRelationColumnToNameService {
                 logger: this.logger,
                 stopOnError: false,
             }
-        );
-
-        // 3. Return response
-        return StandardResponse.success(
-            {
-                count: batchSummary.total,
-                records: [{
-                    total: batchSummary.total,
-                    successful: batchSummary.successful,
-                    failed: batchSummary.failed
-                }]
-            },
-            'PROCESS_COMPLETED',
-            `Successfully processed ${foundItems.length} items`
         );
     }
 

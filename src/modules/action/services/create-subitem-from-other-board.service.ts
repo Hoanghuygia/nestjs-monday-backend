@@ -32,15 +32,16 @@ export class CreateSubitemFromOtherBoardService {
 			return;
 		}
 
-		const { boardId, scheduleColumnId, scheduleBoardId } =
-			body.payload.inputFields;
+		this.logger.info(`AccountId: ${req.session.accountId}`);
+
+		const { boardId, scheduleBoardId } = body.payload.inputFields;
 		this.logger.info(
 			`Input field: ${JSON.stringify(body.payload.inputFields)}`,
 		);
 
-		if (!boardId || !scheduleBoardId || !scheduleColumnId) {
+		if (!boardId || !scheduleBoardId) {
 			this.logger.warn(
-				`No boardId or scheduleBoardId or scheduleColumnId found`,
+				`No boardId or scheduleBoardId found`,
 			);
 			return;
 		}
@@ -48,6 +49,8 @@ export class CreateSubitemFromOtherBoardService {
 		const accessToken = await this.authService.getAccessToken(
 			req.session.accountId.toString(),
 		);
+
+		this.logger.info(`AccessToken: ${accessToken}`);
 		if (!accessToken) {
 			this.logger.error(`No access token found`);
 			return;
