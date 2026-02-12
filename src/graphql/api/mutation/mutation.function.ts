@@ -4,6 +4,8 @@ import {
 	ChangeMultipleColumnValueMutationVariables,
 	CreateNewItemWithColumnValueMutation,
 	CreateNewItemWithColumnValueMutationVariables,
+	DeleteItemMutation,
+	DeleteItemMutationVariables,
 	DuplicateItemMutationMutation,
 	DuplicateItemMutationMutationVariables,
 	MoveItemMutationMutation,
@@ -16,6 +18,7 @@ import {
 	duplicateItemMutation,
 	moveItemWitMutation,
 } from '../../queries/mutation/item.graphql';
+import { delteItemById } from '../../queries/query/item.graphql';
 import { ApiClient } from '@mondaydotcomorg/api';
 
 export interface MutationResult {
@@ -142,5 +145,33 @@ export async function updateItemColumns(
 	return {
 		success: true,
 		itemId: response?.change_multiple_column_values?.id,
+	};
+}
+
+export async function deleteItemById(
+	mondayClient: ApiClient,
+	logger: Logger,
+	variables: DeleteItemMutationVariables,
+): Promise<MutationResult> {
+	const response = await retryMondayApi(
+		() =>
+			mondayClient.request<DeleteItemMutation & {
+				errors?: any;
+			}>(delteItemById, variables),
+		3,
+		logger,
+	);
+
+	if (response?.errors) {
+		logger.error('Error in deleting item', response.errors);
+		return {
+			success: false,
+			errors: response.errors,
+		};
+	}
+
+	return {
+		success: true,
+		itemId: response?.delete_item?.id,
 	};
 }

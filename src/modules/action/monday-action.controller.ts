@@ -71,4 +71,11 @@ export class MondayActionController {
 		this.logger.info(`Call endpoint sync item in calendar ${JSON.stringify(body)}`);
 		return await this.syncItemInCalendarService.execute(req, body);
 	}
+
+	@Post('test-action')
+	@HttpCode(200)
+	async test(@Req() req: Request, @Body() body: any) {
+		this.logger.info(`Call endpoint sync item in calendar ${JSON.stringify(body)}`);
+		return { success: true };
+	}
 }

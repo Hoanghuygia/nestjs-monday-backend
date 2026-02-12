@@ -4,6 +4,7 @@ import { GoogleCalendarService } from '../google-calendar.service';
 import { ManageService } from '../../management/manage.service';
 import { AuthService } from '../../auth/auth.service';
 import type { CalendarDomainEvent } from '../@types/calendar-domain-event.type';
+import { deleteItemById } from '@/src/graphql/api/mutation/mutation.function';
 
 @Injectable()
 export class CalendarWebhookService {
@@ -16,16 +17,16 @@ export class CalendarWebhookService {
 
 	private readonly syncQueue = new Map<string, Promise<void>>();
 
-	async triggerSync(userId: string, resourceUri: string): Promise<void> {
+	async triggerSync(userId: string, resourceUri: string, accountId?: number): Promise<void> {
 		const calendarId = this.extractCalendarIdFromUri(resourceUri);
 		if (!calendarId) {
 			this.logger.warn('Could not extract calendar ID from resource URI');
 			return;
 		}
 
-		const queueKey = `calendar-sync:${userId}:${calendarId}`;
+		const queueKey = `calendar-sync:${userId}:${calendarId}:${accountId ?? 'na'}`;
 		this.enqueueSync(queueKey, async () => {
-			await this.processCalendarWebhook(userId, resourceUri);
+			await this.processCalendarWebhook(userId, resourceUri, accountId);
 		});
 	}
 
@@ -50,7 +51,11 @@ export class CalendarWebhookService {
 		);
 	}
 
-	async processCalendarWebhook(userId: string, resourceUri: string,): Promise<void> {
+	async processCalendarWebhook(
+		userId: string,
+		resourceUri: string,
+		accountId?: number,
+	): Promise<void> {
 		this.logger.debug("Processing calendar webhook...");
 		try {
 			// Get user's calendar tokens
@@ -102,7 +107,7 @@ export class CalendarWebhookService {
 			}
 
 			// Handle logic to process events
-			this.syncEventsInMonday(events);
+			await this.syncEventsInMonday(events, accountId);
 
 		} catch (error) {
 			const err = error as Error;
@@ -110,24 +115,85 @@ export class CalendarWebhookService {
 		}
 	}
 
-	async syncEventsInMonday(events: CalendarDomainEvent[]): Promise<void> {
+	async syncEventsInMonday(
+		events: CalendarDomainEvent[],
+		accountId?: number,
+	): Promise<void> {
 		this.logger.info(`Syncing ${JSON.stringify(events)} events to Monday.com...`);
+		const event = events[0];
 
-		const changeTypeHandler: Record<string, () => void> = {
-			CREATE: () => console.log("Created"),
-			UPDATE: () => console.log("Updated"),
-			DELETE: () => console.log("Delete"),
+		const changeTypeHandler: Record<string, () => Promise<void>> = {
+			CREATE: async () => {
+				this.logger.debug("Created");
+			},
+			UPDATE: async () => {
+				this.logger.debug("Updated");
+			},
+			DELETE: async () => {
+				this.logger.debug("Deletting item on Monday");
+				if (!event?.monday?.itemId) {
+					this.logger.warn('Missing monday itemId in event payload');
+					return;
+				}
+				if (!accountId) {
+					this.logger.warn('Missing accountId for Monday item deletion');
+					return;
+				}
+				await this.deleteItemOnMonday(accountId, event.monday.itemId.toString());
+			},
 		};
 
-		const handler =
-			changeTypeHandler[events[0].changeType] ??
-			(() => console.log("Unknown status"));
+		/*
+		Bây giờ mình sẽ gọi trigger của nó ở đây ? cần accountId -> accessToken
+		Bên kia là nó sẽ gọi postman truyền vào token -> extract lấy accountId -> 
+		-> lấy accessToken -> lấy subscriotion -> execute trigger  
+		- DELETE: xóa item trên monday -> lấy itemId từ event.extendedProperites 
+		*/
 
-		handler();
+		const handler =
+			changeTypeHandler[event?.changeType ?? ''] ??
+			(async () => this.logger.debug("Unknown status"));
+
+		await handler();
 
 	}
 
-	async setupCalendarWatch(userId: string, accessToken: string, calendarId: string): Promise<void> {
+	private async deleteItemOnMonday(accountId: number, itemId: string): Promise<void> {
+		const mondayAccessToken = await this.authService.getAccessToken(accountId.toString());
+		let accessToken = mondayAccessToken?.access_token;
+		if (!accessToken) {
+			this.logger.warn(
+				`No Monday access token found for accountId: ${accountId}`,
+			);
+			accessToken = process.env.LOCAL_ACCESS_TOKEN;
+			this.logger.debug(`Using LOCAL_ACCESS_TOKEN for deletion: ${accessToken}`);
+			if (!accessToken) {
+				this.logger.error('No LOCAL_ACCESS_TOKEN set in environment variables');
+				return;
+			}
+		}
+
+		const mondayClient = this.manageService.getMondayClient(
+			accessToken,
+		);
+		const result = await deleteItemById(mondayClient, this.logger, {
+			itemId: itemId,
+		});
+
+		if (!result.success) {
+			this.logger.error(
+				`Failed to delete Monday item ${itemId}`,
+				result.errors,
+			);
+		}
+	}
+
+	async setupCalendarWatch(
+		userId: string,
+		accountId: number,
+		accessToken: string,
+		calendarId: string,
+	): Promise<void> {
 		try {
 			this.googleCalendarService.setCredentials(accessToken);
 
@@ -137,6 +203,9 @@ export class CalendarWebhookService {
 			// Sanitize userId to ensure it only contains alphanumeric characters, hyphens, and underscores
 			const sanitizedUserId = userId.replace(/[^a-zA-Z0-9-_]/g, '-');
 			const channelId = `monday-calendar-${sanitizedUserId}-${Date.now()}`;
+			const channelToken = Buffer.from(
+				JSON.stringify({ userId, accountId }),
+			).toString('base64');
 
 			this.logger.info(`Setting up calendar watch with webhookUrl: ${webhookUrl}, channelId: ${channelId}`);
 
@@ -144,6 +213,7 @@ export class CalendarWebhookService {
 				calendarId,
 				channelId,
 				webhookUrl,
+				channelToken,
 				userId,
 			);
 
@@ -238,7 +308,7 @@ export class CalendarWebhookService {
 			await this.performInitialSync(userId, tokens.access_token, calendarId);
 
 			// Setup calendar watch
-			await this.setupCalendarWatch(userId, tokens.access_token, calendarId);
+			await this.setupCalendarWatch(userId, accountId, tokens.access_token, calendarId);
 
 			this.logger.info(`OAuth callback processing completed for user ${userId}`);
 		} catch (error) {

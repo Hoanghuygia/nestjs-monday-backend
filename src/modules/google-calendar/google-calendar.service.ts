@@ -226,6 +226,7 @@ export class GoogleCalendarService {
 		calendarId: string,
 		channelId: string,
 		webhookUrl: string,
+		channelToken: string,
 		userId: string,
 	): Promise<CalendarChannelInfo | null> {
 		try {
@@ -237,7 +238,7 @@ export class GoogleCalendarService {
 					id: channelId,
 					type: 'web_hook',
 					address: webhookUrl,
-					token: userId,
+					token: channelToken,
 				},
 			});
 

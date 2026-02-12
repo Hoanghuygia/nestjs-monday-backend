@@ -1,6 +1,5 @@
 import { IsDefined, IsEnum } from 'class-validator';
-import { TriggerEventType } from '../utils/events';
-import { Transform } from 'class-transformer';
+import { TriggerEventType } from '@/src/modules/triggers/others/events';
 
 interface TriggerUnsubscribeDto {
     payload: {
@@ -12,7 +11,7 @@ interface TriggerUnsubscribeDto {
 class TriggerUnsubscribeQueryDto {
     @IsDefined()
     @IsEnum(TriggerEventType)
-    event: TriggerEventType;
+    event!: TriggerEventType;
 }
 
 export type { TriggerUnsubscribeDto, TriggerUnsubscribeQueryDto };

@@ -56,3 +56,12 @@ export const getParentItemIdFromSubItemId = gql`
     }
   }
 `;
+
+export const delteItemById = gql`
+	mutation deleteItem($itemId: ID!) {
+		delete_item(item_id: $itemId){
+			id
+			name
+		}
+	}
+`;

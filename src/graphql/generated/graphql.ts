@@ -8399,6 +8399,13 @@ export type GetParentItemIdFromSubItemIdQueryVariables = Exact<{
 
 export type GetParentItemIdFromSubItemIdQuery = { __typename?: 'Query', items?: Array<{ __typename?: 'Item', id: string, parent_item?: { __typename?: 'Item', id: string } | null } | null> | null };
 
+export type DeleteItemMutationVariables = Exact<{
+  itemId: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteItemMutation = { __typename?: 'Mutation', delete_item?: { __typename?: 'Item', id: string, name: string } | null };
+
 export type GetAccountWorkspaceQueryVariables = Exact<{ [key: string]: never; }>;
 
 

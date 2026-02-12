@@ -29,13 +29,25 @@ export class CalendarWebhookController {
 		@Headers('x-goog-resource-id') resourceId: string,
 		@Headers('x-goog-resource-uri') resourceUri: string,
 		@Headers('x-goog-resource-state') resourceState: string,
-		@Headers('x-goog-channel-token') userId: string,
+		@Headers('x-goog-channel-token') channelToken: string,
 		@Req() req: Request,
 		@Res() res: Response,
 	) {
 		try {
+			const parsedToken = this.parseChannelToken(channelToken);
+			const userId = parsedToken?.userId ?? '';
+			const accountId = parsedToken?.accountId;
+
+			if (!userId) {
+				this.logger.warn('Missing or invalid x-goog-channel-token');
+				return res.status(HttpStatus.BAD_REQUEST).json({
+					success: false,
+					message: 'Missing or invalid channel token',
+				});
+			}
+
 			this.logger.info(
-				`Received calendar webhook: channelId=${channelId}, state=${resourceState}, userId=${userId}, resourceUri=${resourceUri}, resourceId=${resourceId}`,
+				`Received calendar webhook: channelId=${channelId}, state=${resourceState}, userId=${userId}, accountId=${accountId ?? 'n/a'}, resourceUri=${resourceUri}, resourceId=${resourceId}`,
 			);
 
 			// Verify webhook authenticity
@@ -55,7 +67,7 @@ export class CalendarWebhookController {
 
 			// Handle exists event (new or updated event)
 			if (resourceState === 'exists') {
-				void this.calendarWebhookService.triggerSync(userId, resourceUri);
+				void this.calendarWebhookService.triggerSync(userId, resourceUri, accountId);
 			}
 
 			return res.status(HttpStatus.OK).json({ success: true });
@@ -66,6 +78,35 @@ export class CalendarWebhookController {
 				success: false,
 				message: err.message,
 			});
+		}
+	}
+
+	private parseChannelToken(
+		channelToken: string,
+	): { userId: string; accountId?: number } | null {
+		if (!channelToken) {
+			return null;
+		}
+
+		try {
+			const decoded = Buffer.from(channelToken, 'base64').toString('utf-8');
+			const parsed = JSON.parse(decoded) as { userId?: unknown; accountId?: unknown };
+			if (typeof parsed.userId !== 'string' || parsed.userId.length === 0) {
+				return null;
+			}
+
+			const accountId =
+				typeof parsed.accountId === 'number'
+					? parsed.accountId
+					: typeof parsed.accountId === 'string'
+						? Number.parseInt(parsed.accountId, 10)
+						: undefined;
+
+			return Number.isFinite(accountId)
+				? { userId: parsed.userId, accountId }
+				: { userId: parsed.userId };
+		} catch (error) {
+			return { userId: channelToken };
 		}
 	}
 
